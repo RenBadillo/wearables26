@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEARABLES LAB — Bitácora 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   ROOT & RESET
+   ========================================================= */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink:      #0a0a08;
+  --paper:    #f2efe8;
+  --cream:    #e8e4d9;
+  --warm:     #d4cfc0;
+  --acid:     #c8ff00;
+  --rust:     #d45a2a;
+  --slate:    #2a3240;
+  --ghost:    rgba(10,10,8,0.06);
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* =========================================================
+   CURSOR
+   ========================================================= */
+.cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--rust);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+}
+.cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid var(--rust);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s linear, width 0.25s, height 0.25s;
+  opacity: 0.5;
+}
+body:hover .cursor-dot { opacity: 1; }
+
+/* =========================================================
+   NOISE TEXTURE OVERLAY
+   ========================================================= */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* =========================================================
+   PROGRESS BAR
+   ========================================================= */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--rust);
+  z-index: 1000;
+  width: 0%;
+  transition: width 0.05s;
+}
+
+/* =========================================================
+   NAV
+   ========================================================= */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 1.25rem 3rem;
+  mix-blend-mode: multiply;
+}
+.nav-left {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+.nav-center {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.nav-right {
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-end;
+}
+.nav-right a {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.nav-right a:hover { opacity: 1; }
+
+/* =========================================================
+   HERO
+   ========================================================= */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 4rem 4rem;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hero-bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(12rem, 22vw, 22rem);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(10,10,8,0.07);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: -0.02em;
+}
+
+.hero-index {
+  position: absolute;
+  top: 6.5rem;
+  right: 4rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  opacity: 0.35;
+  text-align: right;
+  line-height: 2;
+}
+
+.hero-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: slide-up 0.8s 0.2s ease forwards;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 10vw, 10rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: slide-up 0.8s 0.4s ease forwards;
+}
+.hero-title em {
+  font-style: normal;
+  color: var(--rust);
+  display: block;
+}
+
+.hero-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: flex-end;
+  gap: 2rem;
+  opacity: 0;
+  animation: slide-up 0.8s 0.6s ease forwards;
+}
+.hero-desc {
+  max-width: 420px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(10,10,8,0.6);
+  font-style: italic;
+}
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  text-align: right;
+}
+.h-stat-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--rust);
+}
+.h-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+
+.scroll-line {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.scroll-line span {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.3;
+}
+.scroll-line-bar {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--rust), transparent);
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(10,10,8,0.12);
+  position: relative;
+  z-index: 1;
+}
+.divider-label {
+  position: absolute;
+  top: 50%;
+  left: 4rem;
+  transform: translateY(-50%);
+  background: var(--paper);
+  padding: 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+/* =========================================================
+   SECTION BASE
+   ========================================================= */
+section {
+  position: relative;
+  z-index: 1;
+  padding: 7rem 4rem;
+}
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 1rem;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  margin-bottom: 3rem;
+}
+
+/* =========================================================
+   TIMELINE
+   ========================================================= */
+#timeline {
+  background: var(--ink);
+  color: var(--paper);
+}
+#timeline .section-heading { color: var(--paper); }
+#timeline .section-eyebrow { color: var(--acid); }
+
+.tl-grid {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 0;
+  max-width: 860px;
+}
+
+.tl-row {
+  display: contents;
+}
+
+.tl-date-col {
+  padding: 2.5rem 2rem 2.5rem 0;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  text-align: right;
+  position: relative;
+}
+.tl-date-col::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 16px var(--acid);
+}
+.tl-date-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--acid);
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.tl-content-col {
+  padding: 2.5rem 0 2.5rem 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.tl-row:last-child .tl-content-col { border-bottom: none; }
+
+.tl-session-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(242,239,232,0.3);
+  margin-bottom: 0.4rem;
+}
+.tl-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: var(--paper);
+}
+.tl-body {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(242,239,232,0.55);
+}
+.tl-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 1rem;
+}
+.tl-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(200,255,0,0.25);
+  color: var(--acid);
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+/* =========================================================
+   PROJECTS
+   ========================================================= */
+#proyectos { background: var(--cream); }
+
+.projects-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 5rem;
+  align-items: end;
+}
+.projects-intro-text {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(10,10,8,0.6);
+  font-style: italic;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.project-tile {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  transition: background 0.3s;
+}
+.project-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--rust);
+  transform: translateY(101%);
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.project-tile:hover::before { transform: translateY(0); }
+
+.project-tile:nth-child(1) { }
+.project-tile:nth-child(1)::before { background: var(--acid); }
+.project-tile:nth-child(1):hover { color: var(--ink); }
+
+.tile-inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; }
+
+.tile-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  opacity: 0.3;
+  margin-bottom: auto;
+  padding-bottom: 2rem;
+}
+.tile-category {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 0.75rem;
+}
+.project-tile:nth-child(1) .tile-category { color: var(--rust); }
+.project-tile:hover .tile-category { color: inherit; opacity: 0.7; }
+
+.tile-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.5rem;
+}
+.tile-desc {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.75;
+  opacity: 0.55;
+  max-width: 340px;
+  margin-bottom: 2rem;
+}
+.tile-arrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.5;
+  transition: opacity 0.3s, gap 0.3s;
+}
+.project-tile:hover .tile-arrow { opacity: 1; gap: 1rem; }
+.tile-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+.tile-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* =========================================================
+   SENSORS
+   ========================================================= */
+#sensores { background: var(--paper); }
+
+.sensors-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.sensor-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.sensor-group { }
+.sg-head {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(10,10,8,0.12);
+  margin-bottom: 1rem;
+}
+.sg-head.ext { color: var(--rust); border-color: var(--rust); }
+.sg-head.prop { color: #4a6fa5; border-color: #4a6fa5; }
+.sg-head.int { color: #3a8a5a; border-color: #3a8a5a; }
+
+.sg-items { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.sg-item {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(10,10,8,0.65);
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sg-item::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+.sensor-flow-diagram {
+  background: var(--ink);
+  border-radius: 2px;
+  padding: 2.5rem;
+  color: var(--paper);
+  grid-column: 1/-1;
+  margin-top: 2rem;
+}
+.flow-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 1.5rem;
+}
+.flow-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.08);
+}
+.flow-cell {
+  background: var(--ink);
+  padding: 1.25rem;
+  text-align: center;
+}
+.flow-cell-top {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  opacity: 0.35;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.1em;
+}
+.flow-cell-main {
+  font-weight: 500;
+  font-size: 13px;
+  margin-bottom: 0.3rem;
+}
+.flow-cell-sub {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--acid);
+  opacity: 0.7;
+}
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  opacity: 0.25;
+  background: var(--ink);
+  padding: 1.25rem 0;
+}
+
+/* =========================================================
+   TECHNOLOGY / MATERIALS
+   ========================================================= */
+#tecnologia { background: var(--slate); color: var(--paper); }
+#tecnologia .section-eyebrow { color: var(--acid); }
+#tecnologia .section-heading { color: var(--paper); }
+
+.tech-bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto;
+  gap: 2px;
+}
+
+.tech-cell {
+  background: rgba(255,255,255,0.04);
+  padding: 2rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.3s, border-color 0.3s;
+}
+.tech-cell:hover {
+  background: rgba(200,255,0,0.05);
+  border-color: rgba(200,255,0,0.2);
+}
+.tech-cell.wide { grid-column: span 2; }
+.tech-cell.tall { grid-row: span 2; }
+
+.tech-cell-icon {
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+}
+.tech-cell-name {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--paper);
+}
+.tech-cell-desc {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(242,239,232,0.45);
+}
+.tech-cell-spec {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--acid);
+  margin-top: 1rem;
+  letter-spacing: 0.1em;
+}
+
+/* =========================================================
+   DESIGN THINKING
+   ========================================================= */
+#design { background: var(--cream); }
+
+.dt-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 6rem;
+  align-items: start;
+}
+.dt-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.dt-step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid rgba(10,10,8,0.08);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.dt-step.visible { opacity: 1; transform: none; }
+.dt-step-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: rgba(10,10,8,0.08);
+  line-height: 1;
+}
+.dt-step-content { }
+.dt-step-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+}
+.dt-step-desc {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(10,10,8,0.55);
+}
+
+.dt-insight {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 3rem;
+  border-radius: 2px;
+  position: sticky;
+  top: 8rem;
+}
+.dt-insight-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 2rem;
+}
+.dt-insight-formula {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(242,239,232,0.7);
+  margin-bottom: 2rem;
+  border-left: 2px solid var(--acid);
+  padding-left: 1.5rem;
+}
+.dt-insight-formula strong {
+  font-weight: 500;
+  color: var(--paper);
+}
+.dt-insight-quote {
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(242,239,232,0.4);
+  line-height: 1.8;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 5rem 4rem 3rem;
+  position: relative;
+  z-index: 1;
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 3rem;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+}
+.footer-brand span { color: var(--acid); }
+.footer-desc {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(242,239,232,0.35);
+  margin-top: 1rem;
+}
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 1.5rem;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-links a {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(242,239,232,0.45);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--paper); }
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(242,239,232,0.2);
+}
+
+/* =========================================================
+   REVEAL ANIMATIONS
+   ========================================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* =========================================================
+   KEYFRAMES
+   ========================================================= */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); transform-origin: top; }
+  50% { opacity: 0.8; transform: scaleY(0.5); transform-origin: top; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="progress-bar" id="pbar"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">Wearables Lab · 2026</div>
+  <div class="nav-center">Bitácora</div>
+  <div class="nav-right">
+    <a onclick="goTo('timeline')">Sesiones</a>
+    <a onclick="goTo('proyectos')">Proyectos</a>
+    <a onclick="goTo('sensores')">Sensores</a>
+    <a onclick="goTo('design')">Metodología</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">WEAR</div>
+  <div class="hero-index">
+    Clase de Tecnología Corporal<br>
+    Ene–May 2026<br>
+    Ingeniería · Diseño
+  </div>
+  <div class="hero-subtitle">// Bitácora Digital · Clase de Wearables</div>
+  <h1 class="hero-title">
+    Cuerpo<br>
+    como
+    <em>Interfaz</em>
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">
+      Un registro del proceso creativo y técnico detrás del diseño de dispositivos vestibles —
+      desde electrónica textil hasta prototipos funcionales.
+    </p>
+    <div class="hero-stats">
+      <div>
+        <span class="h-stat-num">8</span>
+        <span class="h-stat-label">Sesiones</span>
+      </div>
+      <div>
+        <span class="h-stat-num">02</span>
+        <span class="h-stat-label">Proyectos</span>
+      </div>
+      <div>
+        <span class="h-stat-num">∞</span>
+        <span class="h-stat-label">Iteraciones</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-line">
+    <span>Scroll</span>
+    <div class="scroll-line-bar"></div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><span class="divider-label">01 — Sesiones de clase</span></div>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="section-eyebrow">// Registro cronológico</div>
+  <h2 class="section-heading">Bitácora de<br>Sesiones</h2>
+
+  <div class="tl-grid reveal">
+    <div class="tl-row">
+      <div class="tl-date-col">
+        <span class="tl-date-text">Ene 07</span>
+      </div>
+      <div class="tl-content-col">
+        <div class="tl-session-tag">Sesión 01</div>
+        <div class="tl-title">Introducción a la Tecnología Corporal</div>
+        <div class="tl-body">El cuerpo como interfaz activa. Se exploraron las bases de la electrónica portable: señales, entrada/salida y las categorías principales de wearables — salud, deporte y accesibilidad. Primer acercamiento a sensores IMU, bio-impedancia y tintas de grafeno.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Smartwatch</span>
+          <span class="tl-tag">Ergonomía</span>
+          <span class="tl-tag">Sensores IMU</span>
+          <span class="tl-tag">Bioimpedancia</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-date-col">
+        <span class="tl-date-text">Ene 14</span>
+      </div>
+      <div class="tl-content-col">
+        <div class="tl-session-tag">Sesión 02</div>
+        <div class="tl-title">Textiles y Materiales Conductores</div>
+        <div class="tl-body">Exploración de hilos conductivos de acero inoxidable (10 Ω/pie, hasta 100 mA), tintas conductivas aplicadas por serigrafía y e-textiles. Equipo: Eduardo, Rayen. Siguiente paso: cuenta en GitHub.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Hilo Conductor</span>
+          <span class="tl-tag">Tinta Conductiva</span>
+          <span class="tl-tag">E-textiles</span>
+          <span class="tl-tag">GitHub</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-date-col">
+        <span class="tl-date-text">Ene 19</span>
+      </div>
+      <div class="tl-content-col">
+        <div class="tl-session-tag">Sesión 03</div>
+        <div class="tl-title">Creación de Página Web</div>
+        <div class="tl-body">El profesor Huber Girón guió el proceso de configuración de GitHub y la personalización del portafolio web prediseñado. Primer contacto con despliegue en GitHub Pages.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">GitHub Pages</span>
+          <span class="tl-tag">HTML/CSS</span>
+          <span class="tl-tag">Portafolio</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-date-col">
+        <span class="tl-date-text">Ene 26</span>
+      </div>
+      <div class="tl-content-col">
+        <div class="tl-session-tag">Sesión 04</div>
+        <div class="tl-title">Design Thinking — Clase con Andrea</div>
+        <div class="tl-body">El triángulo de la innovación: deseable + factible + viable. Proceso DT: Descubrir → Interpretar → Idear → Experimentar → Evolucionar. Técnicas de observación, entrevistas a profundidad, etnografía rápida y netnografía.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Design Thinking</span>
+          <span class="tl-tag">Insight</span>
+          <span class="tl-tag">POV</span>
+          <span class="tl-tag">HMW</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-date-col">
+        <span class="tl-date-text">Feb 04</span>
+      </div>
+      <div class="tl-content-col">
+        <div class="tl-session-tag">Sesión 05</div>
+        <div class="tl-title">Puertos Digitales y Analógicos</div>
+        <div class="tl-body">Diferencia entre señales digitales (0 ó 1, 0–5V) y analógicas (rango continuo de voltaje). Base para entender cómo los sensores comunican datos al microcontrolador.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Señal Digital</span>
+          <span class="tl-tag">Señal Analógica</span>
+          <span class="tl-tag">Arduino</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-date-col">
+        <span class="tl-date-text">Feb 09</span>
+      </div>
+      <div class="tl-content-col">
+        <div class="tl-session-tag">Sesión 06</div>
+        <div class="tl-title">Sensores — Mundo Físico al Digital</div>
+        <div class="tl-body">Un sensor convierte estímulos continuos en valores numéricos. Tres categorías: Exteroceptivos (ambiente), Propioceptivos (movimiento propio) e Interoceptivos (cuerpo humano). Ejercicio: dispositivo LED para ciclista con sensores IMU.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">LDR</span>
+          <span class="tl-tag">Acelerómetro</span>
+          <span class="tl-tag">IMU</span>
+          <span class="tl-tag">Ritmo Cardíaco</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-date-col">
+        <span class="tl-date-text">Feb 16</span>
+      </div>
+      <div class="tl-content-col">
+        <div class="tl-session-tag">Sesión 07</div>
+        <div class="tl-title">Actuadores y Robots Suaves</div>
+        <div class="tl-body">Sistemas que interactúan de forma segura con entornos dinámicos. Tipos: endoesqueleto, exoesqueleto, inflable (neumático/hidráulico). Materiales: elastómeros Ecoflex (1000% elongación), DragonSkin, polímeros termoplásticos (PLA, TPU, EVA, Kapton).</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Ecoflex</span>
+          <span class="tl-tag">Soft Robotics</span>
+          <span class="tl-tag">EAPs</span>
+          <span class="tl-tag">Actuadores</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider" style="background: rgba(255,255,255,0.1);"><span class="divider-label" style="background: var(--ink); color: var(--acid);">02 — Proyectos</span></div>
+
+<!-- PROJECTS -->
+<section id="proyectos">
+  <div class="projects-intro">
+    <div>
+      <div class="section-eyebrow">// Trabajo práctico</div>
+      <h2 class="section-heading">Prototipos<br>& Proyectos</h2>
+    </div>
+    <p class="projects-intro-text">
+      Dos proyectos que integran electrónica, textil y diseño centrado en el usuario.
+      Desde la primera pulsera con hilo conductor hasta un chaleco inteligente para actividades outdoor.
+    </p>
+  </div>
+
+  <div class="projects-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+    <!-- Chaleco -->
+    <a class="project-tile" href="proyecto-chaleco.html">
+      <div class="tile-inner">
+        <div class="tile-num">01 / 03</div>
+        <div class="tile-category">Wearable · Outdoor</div>
+        <h3 class="tile-title">WEARAVEST<br>Chaleco<br>Inteligente</h3>
+        <p class="tile-desc">Chaleco funcional con LEDs de visibilidad y alerta de ubicación vía Telegram para senderismo, hiking y naturaleza.</p>
+        <div class="tile-tags-row">
+          <span class="tile-tag">LEDs</span>
+          <span class="tile-tag">GPS</span>
+          <span class="tile-tag">Telegram Bot</span>
+          <span class="tile-tag">Gabardina</span>
+        </div>
+        <div class="tile-arrow">Ver proyecto →</div>
+      </div>
+    </a>
+
+    <!-- Pulsera V1 -->
+    <a class="project-tile" href="proyecto-pulsera.html#versiones">
+      <div class="tile-inner">
+        <div class="tile-num">02 / 03</div>
+        <div class="tile-category">E-textile · Pulsera V1</div>
+        <h3 class="tile-title">Pulsera<br>Hilo<br>Conductor</h3>
+        <p class="tile-desc">Primera versión: circuito integrado al textil con hilo de acero inoxidable. 5 LEDs de colores con resistencias calibradas para intensidad uniforme.</p>
+        <div class="tile-tags-row">
+          <span class="tile-tag">Hilo conductor</span>
+          <span class="tile-tag">5 LEDs</span>
+          <span class="tile-tag">Sin MCU</span>
+        </div>
+        <div class="tile-arrow">Ver proyecto →</div>
+      </div>
+    </a>
+
+    <!-- Pulsera V2 -->
+    <a class="project-tile" href="proyecto-pulsera.html#versiones">
+      <div class="tile-inner">
+        <div class="tile-num">03 / 03</div>
+        <div class="tile-category">E-textile · Pulsera V2</div>
+        <h3 class="tile-title">Pulsera<br>Micro-<br>controlador</h3>
+        <p class="tile-desc">Segunda versión: secuencia de luz programada en loop con microcontrolador. La pulsera comunica una experiencia al ponérsela.</p>
+        <div class="tile-tags-row">
+          <span class="tile-tag">Microcontrolador</span>
+          <span class="tile-tag">Secuencia LED</span>
+          <span class="tile-tag">Loop</span>
+        </div>
+        <div class="tile-arrow">Ver proyecto →</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><span class="divider-label">03 — Sensores</span></div>
+
+<!-- SENSORS -->
+<section id="sensores">
+  <div class="sensors-layout">
+    <div>
+      <div class="section-eyebrow">// Mundo físico → digital</div>
+      <h2 class="section-heading">Tipos de<br>Sensores</h2>
+      <p style="font-size:14px; font-weight:300; line-height:1.85; color:rgba(10,10,8,0.55); max-width:380px; font-style:italic;">
+        Un sensor convierte algo continuo, caótico y humano en valores que una máquina puede procesar — una escala de voltaje que se traduce en números.
+      </p>
+    </div>
+    <div class="sensor-cols reveal">
+      <div class="sensor-group">
+        <div class="sg-head ext">Exteroceptivos</div>
+        <ul class="sg-items">
+          <li class="sg-item" style="color:var(--rust)">Luz (LDR)</li>
+          <li class="sg-item" style="color:var(--rust)">Sonido</li>
+          <li class="sg-item" style="color:var(--rust)">Distancia</li>
+          <li class="sg-item" style="color:var(--rust)">Temperatura</li>
+        </ul>
+      </div>
+      <div class="sensor-group">
+        <div class="sg-head prop">Propioceptivos</div>
+        <ul class="sg-items">
+          <li class="sg-item" style="color:#4a6fa5">Acelerómetro</li>
+          <li class="sg-item" style="color:#4a6fa5">Giroscopio</li>
+          <li class="sg-item" style="color:#4a6fa5">Encoders</li>
+          <li class="sg-item" style="color:#4a6fa5">Flexión</li>
+        </ul>
+      </div>
+      <div class="sensor-group">
+        <div class="sg-head int">Interoceptivos</div>
+        <ul class="sg-items">
+          <li class="sg-item" style="color:#3a8a5a">Ritmo cardíaco</li>
+          <li class="sg-item" style="color:#3a8a5a">Respiración</li>
+          <li class="sg-item" style="color:#3a8a5a">Presión</li>
+          <li class="sg-item" style="color:#3a8a5a">Bio-impedancia</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sensor-flow-diagram reveal reveal-delay-2">
+    <div class="flow-title">// Cadena de conversión sensor → dato</div>
+    <div class="flow-row">
+      <div class="flow-cell">
+        <div class="flow-cell-top">Mundo físico</div>
+        <div class="flow-cell-main">Luz</div>
+        <div class="flow-cell-sub">Continuo</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-cell">
+        <div class="flow-cell-top">Sensor</div>
+        <div class="flow-cell-main">LDR / Fotodiodo</div>
+        <div class="flow-cell-sub">Transducción</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-cell">
+        <div class="flow-cell-top">Señal</div>
+        <div class="flow-cell-main">Voltaje (0–5V)</div>
+        <div class="flow-cell-sub">Analógico</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-cell">
+        <div class="flow-cell-top">Mundo digital</div>
+        <div class="flow-cell-main">Número (0–1023)</div>
+        <div class="flow-cell-sub">Discreto</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><span class="divider-label">04 — Materiales</span></div>
+
+<!-- TECH -->
+<section id="tecnologia">
+  <div class="section-eyebrow">// Materiales y componentes</div>
+  <h2 class="section-heading reveal">Tecnología<br>Textil</h2>
+
+  <div class="tech-bento reveal reveal-delay-1">
+    <div class="tech-cell wide tall">
+      <div class="tech-cell-icon">🧵</div>
+      <div class="tech-cell-name">Hilo Conductivo de Acero Inoxidable</div>
+      <div class="tech-cell-desc">Fabricado con fibras de acero inoxidable trenzadas en 2–3 capas. Funciona como cable flexible cosido directamente al textil. Más grueso que poliéster pero cosible a mano con agujas de ojo mediano.</div>
+      <div class="tech-cell-spec">10 Ω/pie · &lt;100 mA · adafruit.com/641</div>
+    </div>
+    <div class="tech-cell">
+      <div class="tech-cell-icon">🖨️</div>
+      <div class="tech-cell-name">Tintas Conductivas</div>
+      <div class="tech-cell-desc">Aplicadas por serigrafía. Permiten circuitos flexibles y sensores de presión/flexión sobre tela.</div>
+    </div>
+    <div class="tech-cell">
+      <div class="tech-cell-icon">🔋</div>
+      <div class="tech-cell-name">Batería LiPo</div>
+      <div class="tech-cell-desc">Fuente de energía compacta y recargable. Clave para autonomía en dispositivos vestibles.</div>
+    </div>
+    <div class="tech-cell">
+      <div class="tech-cell-icon">🤸</div>
+      <div class="tech-cell-name">Elastómeros</div>
+      <div class="tech-cell-desc">Ecoflex y DragonSkin: 1000% de elongación a la rotura. Para estructuras suaves y actuadores.</div>
+      <div class="tech-cell-spec">Estira hasta 10x su longitud original</div>
+    </div>
+    <div class="tech-cell">
+      <div class="tech-cell-icon">⚡</div>
+      <div class="tech-cell-name">LEDs NeoPixel</div>
+      <div class="tech-cell-desc">Tiras programables para secuencias de luz. Integradas al textil con hilo conductor.</div>
+    </div>
+    <div class="tech-cell">
+      <div class="tech-cell-icon">📡</div>
+      <div class="tech-cell-name">Módulo GPS/GSM</div>
+      <div class="tech-cell-desc">Para alertas de ubicación. Envía posición aproximada vía bot de Telegram en emergencias.</div>
+    </div>
+    <div class="tech-cell">
+      <div class="tech-cell-icon">🧠</div>
+      <div class="tech-cell-name">Polímeros EAPs</div>
+      <div class="tech-cell-desc">Cambian de forma ante campo eléctrico. IPMCs requieren bajo voltaje y generan grandes deformaciones.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><span class="divider-label">05 — Metodología</span></div>
+
+<!-- DESIGN THINKING -->
+<section id="design">
+  <div class="dt-layout">
+    <div>
+      <div class="section-eyebrow">// Proceso creativo</div>
+      <h2 class="section-heading">Design<br>Thinking</h2>
+      <div class="dt-steps">
+        <div class="dt-step">
+          <div class="dt-step-num">01</div>
+          <div class="dt-step-content">
+            <div class="dt-step-name">Descubrir</div>
+            <div class="dt-step-desc">Observar con mente abierta. Identificar qué hacen las personas, cómo lo hacen y por qué. Buscar patrones y lo inesperado.</div>
+          </div>
+        </div>
+        <div class="dt-step">
+          <div class="dt-step-num">02</div>
+          <div class="dt-step-content">
+            <div class="dt-step-name">Interpretar</div>
+            <div class="dt-step-desc">Recolectar descubrimientos y desarrollar insights. Construir el POV: Usuario + Necesidad + Descubrimiento interesante.</div>
+          </div>
+        </div>
+        <div class="dt-step">
+          <div class="dt-step-num">03</div>
+          <div class="dt-step-content">
+            <div class="dt-step-name">Idear</div>
+            <div class="dt-step-desc">Preguntar ¿Cómo podríamos…? Generar múltiples soluciones sin filtros. Cantidad antes que calidad.</div>
+          </div>
+        </div>
+        <div class="dt-step">
+          <div class="dt-step-num">04</div>
+          <div class="dt-step-content">
+            <div class="dt-step-name">Experimentar</div>
+            <div class="dt-step-desc">Prototipar rápido y barato. Fallar pronto para aprender. Pulseras, patrones, pruebas de LEDs.</div>
+          </div>
+        </div>
+        <div class="dt-step">
+          <div class="dt-step-num">05</div>
+          <div class="dt-step-content">
+            <div class="dt-step-name">Evolucionar</div>
+            <div class="dt-step-desc">No es lineal. Cada iteración informa la siguiente. El proceso es cíclico y continuo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dt-insight reveal">
+      <div class="dt-insight-label">// El triángulo de la innovación</div>
+      <div class="dt-insight-formula">
+        <strong>Deseable</strong> — ¿Qué tanto lo quieren las personas?<br><br>
+        <strong>Factible</strong> — ¿Podemos construirlo técnicamente?<br><br>
+        <strong>Viable</strong> — ¿Tenemos los recursos para sostenerlo?
+      </div>
+      <div class="dt-insight-quote">
+        "Si los 3 factores no convergen, solo tienes creatividad. La intersección de los tres es innovación."<br><br>
+        Insight: Las personas que hacen actividades outdoor valoran la seguridad sin sacrificar libertad de movimiento. La naturaleza enriquece la experiencia y el bienestar.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">WEAR<span>LAB</span></div>
+      <p class="footer-desc">Bitácora digital de la clase de Tecnología Corporal y Dispositivos Vestibles. Diseño e Ingeniería, 2026.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">// Secciones</div>
+      <ul class="footer-links">
+        <li><a onclick="goTo('timeline')">Sesiones de clase</a></li>
+        <li><a onclick="goTo('proyectos')">Proyectos</a></li>
+        <li><a onclick="goTo('sensores')">Sensores</a></li>
+        <li><a onclick="goTo('tecnologia')">Materiales</a></li>
+        <li><a onclick="goTo('design')">Design Thinking</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">// Proyectos</div>
+      <ul class="footer-links">
+        <li><a href="proyecto-chaleco.html">Chaleco Smart Outdoor</a></li>
+        <li><a href="proyecto-pulsera.html">Pulsera Textil Interactiva</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 · Wearables Lab · Bitácora Digital</span>
+    <span class="footer-copy">Tecnología Corporal · UDEM</span>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+function animCursor() {
+  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+  rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+  ring.style.left = rx + 'px'; ring.style.top  = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+
+document.querySelectorAll('a, button, [onclick]').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    dot.style.width = '16px'; dot.style.height = '16px';
+    ring.style.width = '48px'; ring.style.height = '48px';
+  });
+  el.addEventListener('mouseleave', () => {
+    dot.style.width = '8px'; dot.style.height = '8px';
+    ring.style.width = '32px'; ring.style.height = '32px';
+  });
+});
+
+/* SCROLL PROGRESS */
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('pbar').style.width = pct + '%';
+  checkReveal();
+});
+
+/* REVEAL ON SCROLL */
+function checkReveal() {
+  document.querySelectorAll('.reveal, .dt-step').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight - 60) el.classList.add('visible');
+  });
+}
+setTimeout(checkReveal, 200);
+
+/* NAV SCROLL */
+function goTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

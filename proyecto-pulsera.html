@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulsera Textil Interactiva — Wearables Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink:      #0a0a08;
+  --paper:    #f2efe8;
+  --cream:    #e8e4d9;
+  --acid:     #c8ff00;
+  --rust:     #d45a2a;
+  --slate:    #2a3240;
+  --blue:     #1a3a5c;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); overflow-x: hidden; cursor: none; }
+
+body::before { content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4; }
+
+.cursor-dot { width:8px;height:8px;background:var(--blue);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%); }
+.cursor-ring { width:32px;height:32px;border:1px solid var(--blue);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;transition:width .25s,height .25s; }
+
+.progress-bar { position:fixed;top:0;left:0;height:2px;background:var(--blue);z-index:1000;width:0%;transition:width .05s; }
+
+nav { position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;mix-blend-mode:multiply; }
+.nav-back { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);text-decoration:none;opacity:.5;transition:opacity .3s;display:flex;align-items:center;gap:.5rem; }
+.nav-back:hover { opacity:1; }
+.nav-title { font-family:var(--font-display);font-size:1rem;letter-spacing:.3em;text-transform:uppercase; }
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  background: var(--blue);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 4rem 4rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.hero-bg-text { position:absolute;bottom:-4rem;right:-2rem;font-family:var(--font-display);font-size:clamp(12rem,20vw,20rem);color:transparent;-webkit-text-stroke:1px rgba(242,239,232,.06);user-select:none;pointer-events:none;line-height:1;letter-spacing:-.02em; }
+
+/* LED animation */
+.hero-led-bar {
+  position: absolute;
+  top: 7rem;
+  right: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+.led-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  animation: led-blink 1.5s ease-in-out infinite;
+}
+.led-dot:nth-child(1) { background: #ff4444; animation-delay: 0s; box-shadow: 0 0 12px #ff4444; }
+.led-dot:nth-child(2) { background: #ff8800; animation-delay: 0.3s; box-shadow: 0 0 12px #ff8800; }
+.led-dot:nth-child(3) { background: var(--acid); animation-delay: 0.6s; box-shadow: 0 0 12px var(--acid); }
+.led-dot:nth-child(4) { background: #44aaff; animation-delay: 0.9s; box-shadow: 0 0 12px #44aaff; }
+.led-dot:nth-child(5) { background: #cc44ff; animation-delay: 1.2s; box-shadow: 0 0 12px #cc44ff; }
+.led-label { font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;opacity:.35;margin-top:.5rem; }
+
+.hero-eyebrow { font-family:var(--font-mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--acid);margin-bottom:1.5rem;opacity:0;animation:slide-up .8s .2s ease forwards; }
+h1.hero-title { font-family:var(--font-display);font-size:clamp(4rem,9vw,9rem);line-height:.88;letter-spacing:-.01em;margin-bottom:3rem;opacity:0;animation:slide-up .8s .4s ease forwards;color:var(--paper); }
+.hero-bottom-row { display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;border-top:1px solid rgba(242,239,232,.12);padding-top:2rem;opacity:0;animation:slide-up .8s .6s ease forwards; }
+.hero-data-label { font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,239,232,.35);margin-bottom:.4rem; }
+.hero-data-val { font-size:14px;font-weight:500;color:var(--paper); }
+
+/* SECTIONS */
+section { position:relative;z-index:1;padding:6rem 4rem; }
+.section-eyebrow { font-family:var(--font-mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--blue);margin-bottom:1rem; }
+.section-heading { font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4.5rem);line-height:.92;margin-bottom:3rem; }
+.divider { width:100%;height:1px;background:rgba(10,10,8,.1);position:relative;z-index:1; }
+.divider-label { position:absolute;top:50%;left:4rem;transform:translateY(-50%);background:var(--paper);padding:0 1rem;font-family:var(--font-mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--blue); }
+
+/* VERSIONS */
+#versiones { background: var(--paper); }
+.versions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.version-card {
+  padding: 3.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.version-card.v1 { background: var(--cream); }
+.version-card.v2 { background: var(--blue); color: var(--paper); }
+
+.v-num {
+  font-family: var(--font-display);
+  font-size: 7rem;
+  line-height: 0.85;
+  color: rgba(10,10,8,0.07);
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+}
+.version-card.v2 .v-num { color: rgba(242,239,232,0.06); }
+
+.v-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 1rem;
+}
+.version-card.v2 .v-label { color: var(--acid); }
+.v-title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  line-height: 0.92;
+  margin-bottom: 2rem;
+  color: var(--ink);
+}
+.version-card.v2 .v-title { color: var(--paper); }
+
+.v-specs { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 2rem; }
+.v-spec {
+  display: flex;
+  gap: 1rem;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(10,10,8,0.6);
+  align-items: flex-start;
+}
+.version-card.v2 .v-spec { color: rgba(242,239,232,0.55); }
+.v-spec-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+
+.v-materials {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  line-height: 1.8;
+  color: rgba(10,10,8,0.35);
+  text-transform: uppercase;
+}
+.version-card.v2 .v-materials { color: rgba(242,239,232,0.25); }
+
+/* LED SEQUENCE */
+#secuencia { background: var(--ink); color: var(--paper); }
+#secuencia .section-eyebrow { color: var(--acid); }
+#secuencia .section-heading { color: var(--paper); }
+
+.sequence-intro {
+  max-width: 560px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(242,239,232,0.5);
+  margin-bottom: 4rem;
+  font-style: italic;
+}
+
+.led-sequence-viz {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-end;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+.led-step-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.led-step-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(242,239,232,0.3);
+  text-align: center;
+}
+.led-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.led-sim {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  transition: opacity 0.3s;
+}
+.led-sim.on { box-shadow: 0 0 14px currentColor; }
+.led-sim.off { opacity: 0.12; }
+.led-sim.r { background: #ff4444; color: #ff4444; }
+.led-sim.o { background: #ff8800; color: #ff8800; }
+.led-sim.y { background: var(--acid); color: var(--acid); }
+.led-sim.b { background: #44aaff; color: #44aaff; }
+.led-sim.p { background: #cc44ff; color: #cc44ff; }
+
+.arrow-step {
+  font-size: 1.2rem;
+  color: rgba(242,239,232,0.2);
+  align-self: center;
+  padding-bottom: 1.5rem;
+}
+
+.circuit-notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+  margin-top: 2rem;
+}
+.cn-cell {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 2rem;
+}
+.cn-num { font-family:var(--font-display);font-size:3rem;color:rgba(200,255,0,0.2);line-height:1;margin-bottom:1rem; }
+.cn-title { font-size:14px;font-weight:500;margin-bottom:.5rem;color:var(--paper); }
+.cn-body { font-size:12px;font-weight:300;line-height:1.7;color:rgba(242,239,232,.4); }
+
+/* PROCESS */
+#proceso-pulsera { background: var(--cream); }
+.process-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-bottom: 3rem;
+}
+.proc-step {
+  background: var(--paper);
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(10,10,8,0.05);
+  transition: background 0.3s, border-color 0.3s;
+}
+.proc-step:hover { background: var(--ink); color: var(--paper); }
+.proc-num { font-family:var(--font-display);font-size:4rem;color:rgba(10,10,8,.07);line-height:1;margin-bottom:1rem;transition:color .3s; }
+.proc-step:hover .proc-num { color:rgba(200,255,0,.2); }
+.proc-name { font-size:14px;font-weight:500;margin-bottom:.75rem; }
+.proc-body { font-size:12px;font-weight:300;line-height:1.7;color:rgba(10,10,8,.5); }
+.proc-step:hover .proc-body { color:rgba(242,239,232,.5); }
+
+.materials-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.mat-block {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2.5rem;
+}
+.mat-block.light { background: var(--paper); color: var(--ink); border: 1px solid rgba(10,10,8,.06); }
+.mat-block-label { font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--acid);margin-bottom:1.5rem; }
+.mat-block.light .mat-block-label { color:var(--blue); }
+.mat-list { list-style:none;display:flex;flex-direction:column;gap:.5rem; }
+.ml-item { font-size:13px;font-weight:300;color:rgba(242,239,232,.55);display:flex;gap:.75rem;align-items:center; }
+.mat-block.light .ml-item { color:rgba(10,10,8,.55); }
+.ml-item::before { content:'·';color:var(--acid);font-size:1.2rem;line-height:0;flex-shrink:0; }
+.mat-block.light .ml-item::before { color:var(--blue); }
+
+/* COMPARISON */
+#comparacion { background: var(--paper); }
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.comp-table th {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 2px solid var(--ink);
+  color: rgba(10,10,8,0.5);
+}
+.comp-table th:first-child { color: var(--ink); }
+.comp-table td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(10,10,8,0.07);
+  font-weight: 300;
+  color: rgba(10,10,8,0.65);
+}
+.comp-table td:first-child { font-weight: 500; color: var(--ink); }
+.comp-table tr:hover td { background: rgba(10,10,8,0.02); }
+.check { color: #3a8a5a; font-weight: 500; }
+.cross { color: rgba(10,10,8,0.25); }
+
+/* BACK */
+.back-section { background:var(--ink);padding:4rem;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1; }
+.back-link { font-family:var(--font-display);font-size:2rem;color:var(--paper);text-decoration:none;letter-spacing:.1em;transition:color .3s;display:flex;align-items:center;gap:1rem; }
+.back-link:hover { color:var(--acid); }
+.back-link-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;color:rgba(242,239,232,.3);text-transform:uppercase; }
+
+.reveal { opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease; }
+.reveal.visible { opacity:1;transform:none; }
+.reveal-delay-1 { transition-delay:.1s; }
+.reveal-delay-2 { transition-delay:.2s; }
+
+@keyframes slide-up { from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none} }
+@keyframes led-blink {
+  0%,100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="progress-bar" id="pbar"></div>
+
+<nav>
+  <a href="index.html" class="nav-back">← Bitácora</a>
+  <div class="nav-title">Proyecto 02</div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg-text">LED</div>
+  <div class="hero-led-bar">
+    <div class="led-dot"></div>
+    <div class="led-dot"></div>
+    <div class="led-dot"></div>
+    <div class="led-dot"></div>
+    <div class="led-dot"></div>
+    <div class="led-label">5 LEDs · En bucle</div>
+  </div>
+  <div class="hero-eyebrow">// Proyecto 02 — E-textile</div>
+  <h1 class="hero-title">Pulsera<br>Textil<br>Interactiva</h1>
+  <div class="hero-bottom-row">
+    <div>
+      <div class="hero-data-label">Versiones</div>
+      <div class="hero-data-val">2 — Conductor + Micro</div>
+    </div>
+    <div>
+      <div class="hero-data-label">LEDs integrados</div>
+      <div class="hero-data-val">5 de colores distintos</div>
+    </div>
+    <div>
+      <div class="hero-data-label">Activación</div>
+      <div class="hero-data-val">Al cerrar la pulsera</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--blue);color:var(--acid);">01 — Dos versiones</span></div>
+
+<section id="versiones">
+  <div class="section-eyebrow">// Evolución del prototipo</div>
+  <h2 class="section-heading reveal">V1 & V2</h2>
+  <div class="versions-grid reveal reveal-delay-1">
+    <!-- V1 -->
+    <div class="version-card v1">
+      <div class="v-num">1</div>
+      <div class="v-label">// Primera versión</div>
+      <h3 class="v-title">Hilo<br>Conductor</h3>
+      <ul class="v-specs">
+        <li class="v-spec"><span class="v-spec-icon">🧵</span><span>Hilo conductivo de acero inoxidable cosido directamente al textil como pista eléctrica</span></li>
+        <li class="v-spec"><span class="v-spec-icon">💡</span><span>5 LEDs de colores diferentes con resistencias calibradas para intensidad uniforme</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🔘</span><span>Encendido al cerrar la pulsera — actúa como interruptor mecánico</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🚫</span><span>Sin microcontrolador — circuito simple directo con batería</span></li>
+        <li class="v-spec"><span class="v-spec-icon">✏️</span><span>Costura invisible para acabado limpio y profesional</span></li>
+      </ul>
+      <div class="v-materials">
+        Tela suave · Esponja interior · Hilo conductor ·<br>
+        5 LEDs · Resistencias · Batería
+      </div>
+    </div>
+    <!-- V2 -->
+    <div class="version-card v2">
+      <div class="v-num">2</div>
+      <div class="v-label">// Segunda versión</div>
+      <h3 class="v-title">Micro-<br>controlador</h3>
+      <ul class="v-specs">
+        <li class="v-spec"><span class="v-spec-icon">🧠</span><span>Microcontrolador programable para secuencias de encendido/apagado en bucle</span></li>
+        <li class="v-spec"><span class="v-spec-icon">💡</span><span>5 LEDs con secuencia programada que comunica una experiencia o emoción</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🔘</span><span>Loop inicia al cerrar la pulsera y continúa de forma autónoma</span></li>
+        <li class="v-spec"><span class="v-spec-icon">📦</span><span>Para el prototipo, el microcontrolador puede ubicarse fuera de la pulsera</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🎨</span><span>Secuencia LED con intención comunicativa — diseño de experiencia</span></li>
+      </ul>
+      <div class="v-materials">
+        Tela azul mesh · LEDs NeoPixel ·<br>
+        Arduino/MCU · Hilo conductor
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">02 — Secuencia LED</span></div>
+
+<section id="secuencia">
+  <div class="section-eyebrow">// Diseño de interacción</div>
+  <h2 class="section-heading reveal">Secuencia &<br>Circuito</h2>
+  <p class="sequence-intro reveal reveal-delay-1">
+    La pulsera debe comunicar o provocar una experiencia mediante una secuencia programada de encendido y apagado.
+    La secuencia inicia al cerrar la pulsera y continúa en loop — el cuerpo como activador.
+  </p>
+
+  <div class="led-sequence-viz reveal reveal-delay-2">
+    <div class="led-step-group">
+      <div class="led-row">
+        <div class="led-sim r off"></div>
+        <div class="led-sim o off"></div>
+        <div class="led-sim y off"></div>
+        <div class="led-sim b off"></div>
+        <div class="led-sim p off"></div>
+      </div>
+      <div class="led-step-label">Reposo</div>
+    </div>
+    <div class="arrow-step">→</div>
+    <div class="led-step-group">
+      <div class="led-row">
+        <div class="led-sim r on"></div>
+        <div class="led-sim o off"></div>
+        <div class="led-sim y off"></div>
+        <div class="led-sim b off"></div>
+        <div class="led-sim p off"></div>
+      </div>
+      <div class="led-step-label">LED 1</div>
+    </div>
+    <div class="arrow-step">→</div>
+    <div class="led-step-group">
+      <div class="led-row">
+        <div class="led-sim r on"></div>
+        <div class="led-sim o on"></div>
+        <div class="led-sim y off"></div>
+        <div class="led-sim b off"></div>
+        <div class="led-sim p off"></div>
+      </div>
+      <div class="led-step-label">LED 1-2</div>
+    </div>
+    <div class="arrow-step">→</div>
+    <div class="led-step-group">
+      <div class="led-row">
+        <div class="led-sim r on"></div>
+        <div class="led-sim o on"></div>
+        <div class="led-sim y on"></div>
+        <div class="led-sim b on"></div>
+        <div class="led-sim p on"></div>
+      </div>
+      <div class="led-step-label">Todos</div>
+    </div>
+    <div class="arrow-step">→</div>
+    <div class="led-step-group">
+      <div class="led-row">
+        <div class="led-sim r off"></div>
+        <div class="led-sim o off"></div>
+        <div class="led-sim y on"></div>
+        <div class="led-sim b off"></div>
+        <div class="led-sim p off"></div>
+      </div>
+      <div class="led-step-label">Flash</div>
+    </div>
+    <div class="arrow-step">↺</div>
+    <div class="led-step-group">
+      <div class="led-row">
+        <div class="led-sim r off" style="opacity:.25;box-shadow:none;"></div>
+        <div class="led-sim o off" style="opacity:.25;box-shadow:none;"></div>
+        <div class="led-sim y off" style="opacity:.25;box-shadow:none;"></div>
+        <div class="led-sim b off" style="opacity:.25;box-shadow:none;"></div>
+        <div class="led-sim p off" style="opacity:.25;box-shadow:none;"></div>
+      </div>
+      <div class="led-step-label">Loop</div>
+    </div>
+  </div>
+
+  <div class="circuit-notes reveal reveal-delay-2">
+    <div class="cn-cell">
+      <div class="cn-num">01</div>
+      <div class="cn-title">Hilo como pista eléctrica</div>
+      <div class="cn-body">El hilo conductivo de acero inoxidable reemplaza los cables rígidos. Cosido directamente sobre la tela, crea circuitos flexibles que siguen el movimiento del cuerpo.</div>
+    </div>
+    <div class="cn-cell">
+      <div class="cn-num">02</div>
+      <div class="cn-title">Resistencias para uniformidad</div>
+      <div class="cn-body">Se añadieron resistencias calibradas en cada LED para garantizar que todos enciendan con la misma intensidad. Sin ellas, los LEDs más cercanos a la batería brillarían más.</div>
+    </div>
+    <div class="cn-cell">
+      <div class="cn-num">03</div>
+      <div class="cn-title">Interruptor por cierre</div>
+      <div class="cn-body">El circuito se completa cuando la pulsera se cierra alrededor de la muñeca. El cierre actúa como switch — al ponérsela, se activa. Al quitársela, se apaga.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--ink);color:var(--acid);">03 — Proceso de fabricación</span></div>
+
+<section id="proceso-pulsera">
+  <div class="section-eyebrow">// De la tela al prototipo</div>
+  <h2 class="section-heading reveal">Fabricación</h2>
+
+  <div class="process-layout reveal reveal-delay-1">
+    <div class="proc-step">
+      <div class="proc-num">01</div>
+      <div class="proc-name">Diseño del patrón</div>
+      <div class="proc-body">Se diseñó la forma de la pulsera para que se ajuste cómodamente a la muñeca. Materiales principales: tela suave en el exterior y esponja en el interior para confort.</div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-num">02</div>
+      <div class="proc-name">Corte y ensamble</div>
+      <div class="proc-body">Se cortaron las piezas de tela (azul mesh y estructura). Se unieron las capas y se dejó espacio para integrar los componentes electrónicos.</div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-num">03</div>
+      <div class="proc-name">Costura del circuito</div>
+      <div class="proc-body">El hilo conductivo se cosió creando las pistas positiva y negativa del circuito. Se bordaron los puntos de contacto de cada LED con cuidado de no crear cortocircuitos.</div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-num">04</div>
+      <div class="proc-name">Prueba y calibración</div>
+      <div class="proc-body">Se probó el circuito con fuente de laboratorio antes de conectar batería. Se ajustaron resistencias hasta lograr brillo uniforme en todos los LEDs. Prueba de cierre como interruptor.</div>
+    </div>
+  </div>
+
+  <div class="materials-row reveal reveal-delay-2">
+    <div class="mat-block">
+      <div class="mat-block-label">// Versión 1 — Materiales</div>
+      <ul class="mat-list">
+        <li class="ml-item">Tela suave (exterior)</li>
+        <li class="ml-item">Esponja (interior para confort)</li>
+        <li class="ml-item">Hilo conductivo de acero inoxidable</li>
+        <li class="ml-item">5 LEDs de colores distintos</li>
+        <li class="ml-item">Resistencias calibradas</li>
+        <li class="ml-item">Batería tipo botón</li>
+        <li class="ml-item">Aguja de ojo mediano</li>
+      </ul>
+    </div>
+    <div class="mat-block light">
+      <div class="mat-block-label">// Versión 2 — Materiales adicionales</div>
+      <ul class="mat-list">
+        <li class="ml-item">Todo lo de V1 +</li>
+        <li class="ml-item">Microcontrolador (Arduino/similar)</li>
+        <li class="ml-item">LEDs NeoPixel (RGB programables)</li>
+        <li class="ml-item">Código de secuencia (C++/Arduino)</li>
+        <li class="ml-item">Cables jumper para prototipo</li>
+        <li class="ml-item">Tela azul mesh (segunda versión)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">04 — Comparativa</span></div>
+
+<section id="comparacion">
+  <div class="section-eyebrow">// V1 vs V2</div>
+  <h2 class="section-heading reveal">Comparativa de<br>Versiones</h2>
+  <div style="overflow-x:auto;" class="reveal reveal-delay-1">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Característica</th>
+          <th>V1 — Hilo Conductor</th>
+          <th>V2 — Microcontrolador</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tipo de circuito</td>
+          <td>Simple directo, sin lógica</td>
+          <td>Programable con MCU</td>
+        </tr>
+        <tr>
+          <td>Control de LEDs</td>
+          <td>Todos encienden a la vez</td>
+          <td>Secuencia programada en loop</td>
+        </tr>
+        <tr>
+          <td>Resistencias</td>
+          <td><span class="check">✓ Sí, calibradas</span></td>
+          <td><span class="check">✓ Controladas por código</span></td>
+        </tr>
+        <tr>
+          <td>Hilo conductivo</td>
+          <td><span class="check">✓ Obligatorio</span></td>
+          <td><span class="check">✓ Para conexiones al textil</span></td>
+        </tr>
+        <tr>
+          <td>Microcontrolador</td>
+          <td><span class="cross">— No</span></td>
+          <td><span class="check">✓ Sí (externo en prototipo)</span></td>
+        </tr>
+        <tr>
+          <td>Experiencia interactiva</td>
+          <td>Encendido simple</td>
+          <td>Secuencia con intención comunicativa</td>
+        </tr>
+        <tr>
+          <td>Complejidad construcción</td>
+          <td>Baja — ideal para introducción</td>
+          <td>Media — requiere programación</td>
+        </tr>
+        <tr>
+          <td>Costura invisible</td>
+          <td><span class="check">✓</span></td>
+          <td><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Comodidad en muñeca</td>
+          <td><span class="check">✓ Sin bordes rígidos</span></td>
+          <td><span class="check">✓ Sin bordes rígidos</span></td>
+        </tr>
+        <tr>
+          <td>Activación</td>
+          <td>Al cerrar (interruptor mecánico)</td>
+          <td>Al cerrar → inicia loop automático</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="back-section">
+  <div>
+    <div class="back-link-label">Proyecto anterior</div>
+    <a href="proyecto-chaleco.html" class="back-link">← Chaleco Outdoor</a>
+  </div>
+  <div style="text-align:right;">
+    <div class="back-link-label">Volver a</div>
+    <a href="index.html" class="back-link">← Bitácora</a>
+  </div>
+</div>
+
+<script>
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  dot.style.left = mx+'px'; dot.style.top = my+'px';
+  rx += (mx-rx)*.15; ry += (my-ry)*.15;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pbar').style.width = pct+'%';
+  document.querySelectorAll('.reveal').forEach(el => {
+    if(el.getBoundingClientRect().top < window.innerHeight-60) el.classList.add('visible');
+  });
+});
+setTimeout(() => document.querySelectorAll('.reveal').forEach(el => {
+  if(el.getBoundingClientRect().top < window.innerHeight-60) el.classList.add('visible');
+}), 200);
+</script>
+</body>
+</html>

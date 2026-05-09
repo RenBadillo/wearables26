@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEARAVEST (Chaleco Inteligente) — Wearables Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink:      #0a0a08;
+  --paper:    #f2efe8;
+  --cream:    #e8e4d9;
+  --warm:     #d4cfc0;
+  --acid:     #c8ff00;
+  --rust:     #d45a2a;
+  --slate:    #2a3240;
+  --olive:    #3d4a2d;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.cursor-dot { width:8px;height:8px;background:var(--rust);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%); }
+.cursor-ring { width:32px;height:32px;border:1px solid var(--rust);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;transition:width .25s,height .25s; }
+
+.progress-bar { position:fixed;top:0;left:0;height:2px;background:var(--olive);z-index:1000;width:0%;transition:width .05s; }
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 3rem;
+  mix-blend-mode: multiply;
+}
+.nav-back {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-back:hover { opacity: 1; }
+.nav-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  background: var(--olive);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 4rem 4rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.hero-bg-text {
+  position: absolute;
+  bottom: -4rem;
+  right: -2rem;
+  font-family: var(--font-display);
+  font-size: clamp(12rem, 20vw, 20rem);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(242,239,232,0.06);
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.hero-tag {
+  position: absolute;
+  top: 7rem;
+  right: 4rem;
+  text-align: right;
+}
+.hero-tag span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+  opacity: 0.7;
+  line-height: 2.2;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: slide-up 0.8s 0.2s ease forwards;
+}
+h1.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 10vw, 10rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: slide-up 0.8s 0.4s ease forwards;
+  color: var(--paper);
+}
+.hero-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  border-top: 1px solid rgba(242,239,232,0.12);
+  padding-top: 2rem;
+  opacity: 0;
+  animation: slide-up 0.8s 0.6s ease forwards;
+}
+.hero-data-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(242,239,232,0.35);
+  margin-bottom: 0.4rem;
+}
+.hero-data-val {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--paper);
+}
+
+/* SECTIONS */
+section { position: relative; z-index: 1; padding: 6rem 4rem; }
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 1rem;
+}
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 0.92;
+  margin-bottom: 3rem;
+}
+.divider { width:100%;height:1px;background:rgba(10,10,8,0.1);position:relative;z-index:1; }
+.divider-label { position:absolute;top:50%;left:4rem;transform:translateY(-50%);background:var(--paper);padding:0 1rem;font-family:var(--font-mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--rust); }
+
+/* OVERVIEW */
+#overview { background: var(--paper); }
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+.overview-text {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.95;
+  color: rgba(10,10,8,0.65);
+}
+.overview-text p { margin-bottom: 1.5rem; }
+.overview-text strong { font-weight: 500; color: var(--ink); }
+
+.spec-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+.spec-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(10,10,8,0.08);
+  font-size: 13px;
+}
+.spec-key {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(10,10,8,0.35);
+}
+.spec-val { font-weight: 400; color: var(--ink); }
+
+/* USER PROFILE */
+#usuario { background: var(--cream); }
+.user-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+.user-card {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2.5rem;
+  position: sticky;
+  top: 7rem;
+}
+.user-card-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 1.5rem;
+}
+.user-avatar {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--rust);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--paper);
+  margin-bottom: 1.5rem;
+}
+.user-name {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 0.95;
+  margin-bottom: 0.5rem;
+}
+.user-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(242,239,232,0.4);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.user-detail {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(242,239,232,0.5);
+}
+.user-detail + .user-detail { margin-top: 0.75rem; }
+.user-detail strong {
+  font-weight: 500;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.user-story {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 2;
+  color: rgba(10,10,8,0.6);
+  font-style: italic;
+  margin-bottom: 3rem;
+  max-width: 560px;
+}
+.needs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.need-card {
+  background: var(--paper);
+  padding: 1.5rem;
+  border-left: 2px solid var(--rust);
+}
+.need-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.need-body {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(10,10,8,0.5);
+}
+.need-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+/* MARKET */
+#mercado { background: var(--paper); }
+.market-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+  margin-bottom: 4rem;
+}
+.market-cell {
+  background: var(--cream);
+  padding: 2.5rem;
+  border: 1px solid rgba(10,10,8,0.06);
+}
+.market-cell-icon { font-size: 2rem; margin-bottom: 1rem; }
+.market-cell-name { font-size: 15px; font-weight: 500; margin-bottom: 0.75rem; }
+.market-cell-desc { font-size: 12px; font-weight: 300; line-height: 1.75; color: rgba(10,10,8,0.5); }
+
+.cost-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.cost-block {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 3rem;
+}
+.cost-block.light { background: var(--cream); color: var(--ink); }
+.cost-label-small {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  margin-bottom: 1rem;
+}
+.cost-big {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--acid);
+  margin-bottom: 0.5rem;
+}
+.cost-block.light .cost-big { color: var(--rust); }
+.cost-sub { font-size: 12px; font-weight: 300; opacity: 0.5; margin-bottom: 2rem; }
+.cost-items { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+.ci {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.cost-block.light .ci { border-bottom-color: rgba(10,10,8,0.08); }
+.ci-label { opacity: 0.5; font-weight: 300; }
+.ci-val { font-family: var(--font-mono); font-size: 11px; }
+
+/* PROCESS */
+#proceso { background: var(--slate); color: var(--paper); }
+#proceso .section-eyebrow { color: var(--acid); }
+#proceso .section-heading { color: var(--paper); }
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  margin-bottom: 4rem;
+}
+.process-step {
+  background: rgba(255,255,255,0.04);
+  padding: 2rem 1.5rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.3s;
+}
+.process-step:hover { background: rgba(200,255,0,0.06); }
+.ps-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: rgba(200,255,0,0.25);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.ps-name {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--paper);
+}
+.ps-items { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+.ps-item {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(242,239,232,0.4);
+  line-height: 1.5;
+}
+.ps-item::before { content: '— '; color: var(--acid); opacity: 0.5; }
+
+.materials-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+}
+.mat-cell {
+  background: rgba(255,255,255,0.03);
+  padding: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.mat-category {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+  margin-bottom: 1rem;
+}
+.mat-items { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+.mat-item {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(242,239,232,0.5);
+}
+.mat-item::before { content: '·  '; color: var(--acid); }
+
+/* TECH SPECS */
+#tecnica { background: var(--cream); }
+.tech-specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.ts-card {
+  background: var(--paper);
+  padding: 2.5rem;
+  border: 1px solid rgba(10,10,8,0.06);
+}
+.ts-card.dark { background: var(--ink); color: var(--paper); }
+.ts-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(10,10,8,0.1);
+}
+.ts-card.dark .ts-title { color: var(--acid); border-bottom-color: rgba(255,255,255,0.08); }
+.ts-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.ts-item {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(10,10,8,0.65);
+  padding-left: 1.25rem;
+  position: relative;
+}
+.ts-card.dark .ts-item { color: rgba(242,239,232,0.55); }
+.ts-item::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--rust);
+  font-size: 9px;
+}
+.ts-card.dark .ts-item::before { color: var(--acid); }
+
+/* BACK LINK */
+.back-section {
+  background: var(--ink);
+  padding: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+.back-link {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--paper);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.back-link:hover { color: var(--acid); }
+.back-link-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: rgba(242,239,232,0.3);
+  text-transform: uppercase;
+}
+
+/* REVEALS */
+.reveal { opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease; }
+.reveal.visible { opacity:1;transform:none; }
+.reveal-delay-1 { transition-delay:.1s; }
+.reveal-delay-2 { transition-delay:.2s; }
+
+@keyframes slide-up {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:none; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="progress-bar" id="pbar"></div>
+
+<nav>
+  <a href="index.html" class="nav-back">← Bitácora</a>
+  <div class="nav-title">Proyecto 01</div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">VEST</div>
+  <div class="hero-tag">
+    <span>Outdoor · Hiking</span>
+    <span>Seguridad · Visibilidad</span>
+    <span>GPS · LEDs · Textil</span>
+  </div>
+  <div class="hero-eyebrow">// Proyecto 01 — Wearable Outdoor</div>
+  <h1 class="hero-title">WEARAVEST<br>Chaleco<br>Inteligente</h1>
+  <div class="hero-bottom-row">
+    <div>
+      <div class="hero-data-label">Costo producción</div>
+      <div class="hero-data-val">$1,800 — $2,500 MXN</div>
+    </div>
+    <div>
+      <div class="hero-data-label">Precio estimado</div>
+      <div class="hero-data-val">$3,500 — $6,500 MXN</div>
+    </div>
+    <div>
+      <div class="hero-data-label">Materiales</div>
+      <div class="hero-data-val">Gabardina olivo · Popelina · Mesh</div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><span class="divider-label">01 — Descripción</span></div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="section-eyebrow">// Qué es y qué resuelve</div>
+  <h2 class="section-heading reveal">El Chaleco</h2>
+  <div class="overview-grid">
+    <div class="overview-text reveal">
+      <p>Un chaleco funcional diseñado para personas que hacen actividades outdoor — <strong>hiking, senderismo, acampado y días en la naturaleza</strong> — que necesitan más seguridad sin sacrificar libertad de movimiento.</p>
+      <p>Integra <strong>iluminación LED</strong> para visibilidad en condiciones de poca luz y un sistema de <strong>alerta de ubicación vía Telegram</strong> para que el usuario pueda avisar su posición en caso de emergencia, sin necesitar tener el celular en mano.</p>
+      <p>El chaleco no es solo una prenda. Es una herramienta que permite disfrutar la naturaleza con mayor <strong>tranquilidad, autonomía y seguridad</strong>.</p>
+    </div>
+    <ul class="spec-list reveal reveal-delay-1">
+      <li class="spec-row">
+        <span class="spec-key">Tipo</span>
+        <span class="spec-val">Chaleco textil inteligente</span>
+      </li>
+      <li class="spec-row">
+        <span class="spec-key">Talla base</span>
+        <span class="spec-val">L (libro CyC para hombre)</span>
+      </li>
+      <li class="spec-row">
+        <span class="spec-key">Tela exterior</span>
+        <span class="spec-val">Gabardina verde olivo 100% algodón</span>
+      </li>
+      <li class="spec-row">
+        <span class="spec-key">Forro</span>
+        <span class="spec-val">Popelina negra + mesh verde</span>
+      </li>
+      <li class="spec-row">
+        <span class="spec-key">Iluminación</span>
+        <span class="spec-val">Tira de LEDs integrada</span>
+      </li>
+      <li class="spec-row">
+        <span class="spec-key">Conectividad</span>
+        <span class="spec-val">Módulo GPS · Bot Telegram</span>
+      </li>
+      <li class="spec-row">
+        <span class="spec-key">Activación alerta</span>
+        <span class="spec-val">Botón físico en chaleco</span>
+      </li>
+      <li class="spec-row">
+        <span class="spec-key">Bolsas</span>
+        <span class="spec-val">2 tipo cargo + 1 para electrónica</span>
+      </li>
+      <li class="spec-row">
+        <span class="spec-key">Decoración</span>
+        <span class="spec-val">Parches bordados y estampados</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><span class="divider-label">02 — Usuario</span></div>
+
+<!-- USER -->
+<section id="usuario">
+  <div class="section-eyebrow">// Perfil de usuario</div>
+  <h2 class="section-heading reveal">¿Para Quién<br>Es?</h2>
+  <div class="user-layout">
+    <div class="user-card reveal">
+      <div class="user-card-label">// Perfil primario</div>
+      <div class="user-avatar">JR</div>
+      <div class="user-name">Jorge<br>Ramírez</div>
+      <div class="user-role">48 años · Outdoor enthusiast</div>
+      <div class="user-detail">
+        <strong>Ocupación</strong>
+        Empleado administrativo, empresa de logística
+      </div>
+      <div class="user-detail">
+        <strong>Actividad</strong>
+        Senderismo, hiking, salidas a la naturaleza los fines de semana
+      </div>
+      <div class="user-detail">
+        <strong>Situación</strong>
+        Casado, dos hijos adolescentes. Vive en zona urbana pero busca el exterior regularmente.
+      </div>
+      <div class="user-detail">
+        <strong>Dolor clave</strong>
+        Ha caminado de noche sin visibilidad. Su familia no sabe dónde está. Necesita seguridad sin burocracia.
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-1">
+      <p class="user-story">
+        "Para él, salir a la naturaleza no se trata solo de llegar al destino — es el silencio, el aire, el alejarse del ritmo acelerado de la ciudad.
+        No quiere equipo sofisticado. Quiere algo que funcione cuando lo necesita."
+      </p>
+      <div class="needs-grid">
+        <div class="need-card">
+          <span class="need-tag">Necesidad 01</span>
+          <div class="need-title">Visibilidad nocturna</div>
+          <div class="need-body">Cuando oscurece en el trail, revisar equipo o caminar cerca de un barranco se vuelve peligroso. Los LEDs resuelven esto sin depender de linternas externas.</div>
+        </div>
+        <div class="need-card">
+          <span class="need-tag">Necesidad 02</span>
+          <div class="need-title">Alerta de ubicación</div>
+          <div class="need-body">Un botón en el chaleco envía la posición GPS por Telegram. Su familia sabe dónde está sin que él tenga que sacar el celular.</div>
+        </div>
+        <div class="need-card">
+          <span class="need-tag">Necesidad 03</span>
+          <div class="need-title">Todo integrado</div>
+          <div class="need-body">Sin accesorios extra, sin cables sueltos. La electrónica vive dentro del chaleco. La experiencia de uso es limpia y natural.</div>
+        </div>
+        <div class="need-card">
+          <span class="need-tag">Necesidad 04</span>
+          <div class="need-title">Tranquilidad emocional</div>
+          <div class="need-body">Sentirse visible, localizado y preparado le permite concentrarse en la experiencia y no en los riesgos. La tecnología desaparece para que el momento esté presente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><span class="divider-label">03 — Mercado</span></div>
+
+<!-- MARKET -->
+<section id="mercado">
+  <div class="section-eyebrow">// Contexto de mercado</div>
+  <h2 class="section-heading reveal">Mercado &<br>Costos</h2>
+
+  <div class="market-layout reveal reveal-delay-1">
+    <div class="market-cell">
+      <div class="market-cell-icon">🏔️</div>
+      <div class="market-cell-name">Outdoor & Trail</div>
+      <div class="market-cell-desc">Personas que hacen hiking, senderismo, acampado o cualquier actividad cerca de la naturaleza. Buscan equipo funcional que mejore su experiencia y seguridad.</div>
+    </div>
+    <div class="market-cell">
+      <div class="market-cell-icon">🛡️</div>
+      <div class="market-cell-name">Seguridad Personal</div>
+      <div class="market-cell-desc">Usuarios que realizan actividades en lugares alejados o con poca iluminación. El chaleco responde a su necesidad de estar localizados sin depender del celular.</div>
+    </div>
+    <div class="market-cell">
+      <div class="market-cell-icon">⚙️</div>
+      <div class="market-cell-name">Tech Wearables</div>
+      <div class="market-cell-desc">Productos que integran funciones inteligentes en prendas cotidianas. Atractivo para tiendas especializadas en outdoor, e-commerce y marcas de aventura.</div>
+    </div>
+  </div>
+
+  <div class="cost-layout reveal reveal-delay-2">
+    <div class="cost-block">
+      <div class="cost-label-small">// Costo de producción</div>
+      <div class="cost-big">$2,150</div>
+      <div class="cost-sub">MXN promedio estimado</div>
+      <ul class="cost-items">
+        <li class="ci"><span class="ci-label">Telas (gabardina, popelina, mesh)</span><span class="ci-val">~$400</span></li>
+        <li class="ci"><span class="ci-label">Componentes electrónicos</span><span class="ci-val">~$800</span></li>
+        <li class="ci"><span class="ci-label">Hilo, cierres, broches, cables</span><span class="ci-val">~$200</span></li>
+        <li class="ci"><span class="ci-label">Confección e integración electrónica</span><span class="ci-val">~$450</span></li>
+        <li class="ci"><span class="ci-label">Programación y pruebas</span><span class="ci-val">~$300</span></li>
+      </ul>
+    </div>
+    <div class="cost-block light">
+      <div class="cost-label-small">// Precio de venta estimado</div>
+      <div class="cost-big">$5,000</div>
+      <div class="cost-sub">MXN rango: $3,500 — $6,500</div>
+      <ul class="cost-items">
+        <li class="ci"><span class="ci-label">Canales de distribución</span><span class="ci-val" style="font-family:var(--font-body)">Outdoor / Camping</span></li>
+        <li class="ci"><span class="ci-label">E-commerce</span><span class="ci-val" style="font-family:var(--font-body)">MercadoLibre, Amazon</span></li>
+        <li class="ci"><span class="ci-label">Tiendas especializadas</span><span class="ci-val" style="font-family:var(--font-body)">Deportivo / Tech</span></li>
+        <li class="ci"><span class="ci-label">Mercado secundario</span><span class="ci-val" style="font-family:var(--font-body)">Campismo, escalada</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--slate);color:var(--acid);">04 — Proceso</span></div>
+
+<!-- PROCESS -->
+<section id="proceso">
+  <div class="section-eyebrow">// De la idea al prototipo</div>
+  <h2 class="section-heading reveal">Proceso de<br>Fabricación</h2>
+
+  <div class="process-steps reveal reveal-delay-1">
+    <div class="process-step">
+      <div class="ps-num">01</div>
+      <div class="ps-name">Investigación y Diseño</div>
+      <ul class="ps-items">
+        <li class="ps-item">Design Thinking</li>
+        <li class="ps-item">Perfil de usuario</li>
+        <li class="ps-item">Definición de necesidades</li>
+        <li class="ps-item">Bocetos y referencias</li>
+      </ul>
+    </div>
+    <div class="process-step">
+      <div class="ps-num">02</div>
+      <div class="ps-name">Patronaje</div>
+      <ul class="ps-items">
+        <li class="ps-item">Libro CyC talla L</li>
+        <li class="ps-item">Modificación de sisa</li>
+        <li class="ps-item">Patrones bolsas cargo</li>
+        <li class="ps-item">Ajuste holgura</li>
+      </ul>
+    </div>
+    <div class="process-step">
+      <div class="ps-num">03</div>
+      <div class="ps-name">Corte y Confección</div>
+      <ul class="ps-items">
+        <li class="ps-item">Marcado con greda</li>
+        <li class="ps-item">Corte al hilo de tela</li>
+        <li class="ps-item">Forro popelina+mesh</li>
+        <li class="ps-item">Costura interior/exterior</li>
+      </ul>
+    </div>
+    <div class="process-step">
+      <div class="ps-num">04</div>
+      <div class="ps-name">Integración Electrónica</div>
+      <ul class="ps-items">
+        <li class="ps-item">Pruebas tira LEDs</li>
+        <li class="ps-item">Módulo GPS/GSM</li>
+        <li class="ps-item">Botón de alerta</li>
+        <li class="ps-item">Programación Telegram</li>
+      </ul>
+    </div>
+    <div class="process-step">
+      <div class="ps-num">05</div>
+      <div class="ps-name">Acabados y Diseño</div>
+      <ul class="ps-items">
+        <li class="ps-item">Parches bordados</li>
+        <li class="ps-item">Estampado serigrafía</li>
+        <li class="ps-item">Bolsas tipo cargo</li>
+        <li class="ps-item">Prueba de usuario</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="materials-table reveal reveal-delay-2">
+    <div class="mat-cell">
+      <div class="mat-category">// Telas</div>
+      <ul class="mat-items">
+        <li class="mat-item">Gabardina verde olivo 100% algodón</li>
+        <li class="mat-item">Popelina negra 100% algodón</li>
+        <li class="mat-item">Mesh verde (ventilación)</li>
+      </ul>
+    </div>
+    <div class="mat-cell">
+      <div class="mat-category">// Electrónica</div>
+      <ul class="mat-items">
+        <li class="mat-item">Tira de luces LED</li>
+        <li class="mat-item">Módulo de localización GPS</li>
+        <li class="mat-item">Batería recargable</li>
+        <li class="mat-item">Botón táctil físico</li>
+        <li class="mat-item">Cables y conectores</li>
+      </ul>
+    </div>
+    <div class="mat-cell">
+      <div class="mat-category">// Confección</div>
+      <ul class="mat-items">
+        <li class="mat-item">Hilo verde y blanco</li>
+        <li class="mat-item">Cierres y broches</li>
+        <li class="mat-item">Alfileres</li>
+        <li class="mat-item">Tijeras de tela</li>
+        <li class="mat-item">Máquina de coser industrial</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><span class="divider-label">05 — Especificaciones técnicas</span></div>
+
+<!-- TECH -->
+<section id="tecnica">
+  <div class="section-eyebrow">// Requisitos del proyecto</div>
+  <h2 class="section-heading reveal">Especificaciones<br>Técnicas</h2>
+  <div class="tech-specs-grid reveal reveal-delay-1">
+    <div class="ts-card dark">
+      <div class="ts-title">// Electrónica e integración</div>
+      <ul class="ts-list">
+        <li class="ts-item">LEDs integrados directamente a la tela, no montados externamente como objeto rígido</li>
+        <li class="ts-item">Módulo GPS que obtiene coordenadas aproximadas y las envía a Telegram vía bot</li>
+        <li class="ts-item">Botón físico accesible sin sacar el celular — activación de alerta en un toque</li>
+        <li class="ts-item">Batería recargable con autonomía para una jornada completa de hiking</li>
+        <li class="ts-item">Cables y conectores ocultos dentro del forro del chaleco</li>
+      </ul>
+    </div>
+    <div class="ts-card">
+      <div class="ts-title">// Construcción textil</div>
+      <ul class="ts-list">
+        <li class="ts-item">Patronaje en talla L con modificaciones de sisa para mayor holgura y rango de movimiento</li>
+        <li class="ts-item">Forro doble de popelina negra y mesh verde para transpirabilidad en actividad física</li>
+        <li class="ts-item">Dos bolsas tipo cargo con tapas y costuras de carga para equipo y accesorios</li>
+        <li class="ts-item">Bolsa interior dedicada para alojar la parte electrónica de forma segura y accesible</li>
+        <li class="ts-item">Parches bordados y estampados integrados como elementos de diseño visual</li>
+      </ul>
+    </div>
+    <div class="ts-card">
+      <div class="ts-title">// Diseño y ergonomía</div>
+      <ul class="ts-list">
+        <li class="ts-item">Sin bordes rígidos ni componentes que interrumpan el movimiento natural del cuerpo</li>
+        <li class="ts-item">Diseño outdoor con estética funcional — colores que se integran a entornos naturales</li>
+        <li class="ts-item">Peso distribuido equitativamente para uso prolongado en hiking</li>
+        <li class="ts-item">Resistencia básica a condiciones de exterior (polvo, roce de vegetación)</li>
+      </ul>
+    </div>
+    <div class="ts-card dark">
+      <div class="ts-title">// Funcionalidades clave</div>
+      <ul class="ts-list">
+        <li class="ts-item">Visibilidad nocturna: LEDs activan iluminación para revisar equipo y caminar con seguridad</li>
+        <li class="ts-item">Alerta de emergencia: Un botón envía coordenadas GPS por Telegram al contacto configurado</li>
+        <li class="ts-item">Sin dependencia del celular: todas las funciones accesibles desde el chaleco</li>
+        <li class="ts-item">Uso para actividades: senderismo, hiking, acampado, salidas a presas y ríos</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BACK -->
+<div class="back-section">
+  <div>
+    <div class="back-link-label">Siguiente proyecto</div>
+    <a href="proyecto-pulsera.html" class="back-link">Pulsera Textil →</a>
+  </div>
+  <div style="text-align:right;">
+    <div class="back-link-label">Volver a</div>
+    <a href="index.html" class="back-link">← Bitácora</a>
+  </div>
+</div>
+
+<script>
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  dot.style.left = mx+'px'; dot.style.top = my+'px';
+  rx += (mx-rx)*.15; ry += (my-ry)*.15;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pbar').style.width = pct+'%';
+  document.querySelectorAll('.reveal').forEach(el => {
+    if(el.getBoundingClientRect().top < window.innerHeight-60) el.classList.add('visible');
+  });
+});
+setTimeout(() => document.querySelectorAll('.reveal').forEach(el => {
+  if(el.getBoundingClientRect().top < window.innerHeight-60) el.classList.add('visible');
+}), 200);
+</script>
+</body>
+</html>
