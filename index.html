@@ -19,6 +19,7 @@
   --acid:     #c8ff00;
   --rust:     #d45a2a;
   --slate:    #2a3240;
+  --olive:    #3d4a2d;
   --ghost:    rgba(10,10,8,0.06);
   --font-display: 'Bebas Neue', sans-serif;
   --font-body:    'DM Sans', sans-serif;
@@ -36,25 +37,29 @@ body {
 }
 
 /* =========================================================
-   CURSOR & BACKGROUND
+   CURSOR & BACKGROUND NOISE
    ========================================================= */
 .cursor-dot { width: 8px; height: 8px; background: var(--rust); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s; }
 .cursor-ring { width: 32px; height: 32px; border: 1px solid var(--rust); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: transform 0.08s linear, width 0.25s, height 0.25s; opacity: 0.5; }
 body:hover .cursor-dot { opacity: 1; }
 
 body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.4; }
+
 .progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--rust); z-index: 1000; width: 0%; transition: width 0.05s; }
 
 /* =========================================================
-   NAV & HERO
+   NAV
    ========================================================= */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 1.25rem 3rem; mix-blend-mode: multiply; }
 .nav-left { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: var(--ink); opacity: 0.5; text-transform: uppercase; }
 .nav-center { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink); }
 .nav-right { display: flex; gap: 2rem; justify-content: flex-end; }
-.nav-right a { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); text-decoration: none; opacity: 0.5; transition: opacity 0.3s; cursor:pointer;}
-.nav-right a:hover { opacity: 1; }
+.nav-right a { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); text-decoration: none; opacity: 0.5; transition: opacity 0.3s; cursor: pointer; }
+.nav-right a:hover { opacity: 1; color: var(--rust); }
 
+/* =========================================================
+   HERO
+   ========================================================= */
 #hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 4rem 4rem; overflow: hidden; z-index: 1; }
 .hero-bg-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-display); font-size: clamp(12rem, 22vw, 22rem); color: transparent; -webkit-text-stroke: 1px rgba(10,10,8,0.07); white-space: nowrap; user-select: none; pointer-events: none; letter-spacing: -0.02em; }
 .hero-index { position: absolute; top: 6.5rem; right: 4rem; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; opacity: 0.35; text-align: right; line-height: 2; }
@@ -81,6 +86,14 @@ section { position: relative; z-index: 1; padding: 7rem 4rem; }
 .divider-label { position: absolute; top: 50%; left: 4rem; transform: translateY(-50%); background: var(--paper); padding: 0 1rem; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--rust); }
 
 /* =========================================================
+   MANIFIESTO (NUEVA SECCIÓN)
+   ========================================================= */
+#manifiesto { background: var(--cream); text-align: center; padding: 10rem 4rem; }
+.manifesto-text { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 4rem); line-height: 1.1; max-width: 900px; margin: 0 auto; color: var(--ink); }
+.manifesto-text em { font-style: normal; color: var(--rust); }
+.manifesto-sub { font-size: 14px; font-weight: 300; line-height: 1.8; color: rgba(10,10,8,0.6); max-width: 500px; margin: 3rem auto 0; font-style: italic; }
+
+/* =========================================================
    TIMELINE
    ========================================================= */
 #timeline { background: var(--ink); color: var(--paper); }
@@ -100,35 +113,43 @@ section { position: relative; z-index: 1; padding: 7rem 4rem; }
 .tl-tag { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid rgba(200,255,0,0.25); color: var(--acid); padding: 3px 10px; border-radius: 2px; }
 
 /* =========================================================
-   PROJECTS (MODULAR HUB)
+   PROJECTS (MODULAR HUB PULIDO)
    ========================================================= */
-#proyectos { background: var(--cream); }
+#proyectos { background: var(--paper); }
 .projects-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-bottom: 5rem; align-items: end; }
 .projects-intro-text { font-size: 15px; font-weight: 300; line-height: 1.9; color: rgba(10,10,8,0.6); font-style: italic; }
 .projects-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; }
-.project-tile { background: var(--ink); color: var(--paper); padding: 3rem; position: relative; overflow: hidden; cursor: pointer; text-decoration: none; display: block; transition: background 0.3s; }
+
+.project-tile { background: var(--ink); color: var(--paper); padding: 3.5rem 3rem; position: relative; overflow: hidden; cursor: pointer; text-decoration: none; display: block; transition: background 0.4s; }
 .project-tile::before { content: ''; position: absolute; inset: 0; background: var(--rust); transform: translateY(101%); transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1); }
 .project-tile:hover::before { transform: translateY(0); }
 .project-tile:nth-child(1)::before { background: var(--acid); }
 .project-tile:nth-child(1):hover { color: var(--ink); }
 .project-tile:nth-child(3)::before { background: var(--slate); }
-.tile-inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; }
+
+.tile-inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.project-tile:hover .tile-inner { transform: scale(1.03); }
+
 .tile-num { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; opacity: 0.3; margin-bottom: auto; padding-bottom: 2rem; }
-.tile-category { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acid); margin-bottom: 0.75rem; }
+.tile-category { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acid); margin-bottom: 0.75rem; transition: color 0.3s;}
 .project-tile:nth-child(1) .tile-category { color: var(--rust); }
 .project-tile:nth-child(3) .tile-category { color: var(--paper); }
 .project-tile:hover .tile-category { color: inherit; opacity: 0.7; }
-.tile-title { font-family: var(--font-display); font-size: clamp(2rem, 3.5vw, 3.5rem); line-height: 0.92; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
-.tile-desc { font-size: 12px; font-weight: 300; line-height: 1.75; opacity: 0.55; max-width: 340px; margin-bottom: 2rem; }
+
+.tile-title { font-family: var(--font-display); font-size: clamp(2.5rem, 3.5vw, 3.5rem); line-height: 0.92; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+.tile-desc { font-size: 12px; font-weight: 300; line-height: 1.75; opacity: 0.55; max-width: 340px; margin-bottom: 2rem; transition: opacity 0.3s; }
+.project-tile:hover .tile-desc { opacity: 0.8; }
+
 .tile-arrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; display: flex; align-items: center; gap: 0.5rem; opacity: 0.5; transition: opacity 0.3s, gap 0.3s; }
 .project-tile:hover .tile-arrow { opacity: 1; gap: 1rem; }
 .tile-tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
-.tile-tag { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 2px; opacity: 0.6; }
+.tile-tag { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 2px; opacity: 0.6; }
+.project-tile:hover .tile-tag { border-color: currentColor; opacity: 0.5; }
 
 /* =========================================================
    SENSORS
    ========================================================= */
-#sensores { background: var(--paper); }
+#sensores { background: var(--cream); }
 .sensors-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
 .sensor-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
 .sg-head { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(10,10,8,0.12); margin-bottom: 1rem; }
@@ -154,19 +175,19 @@ section { position: relative; z-index: 1; padding: 7rem 4rem; }
 #tecnologia .section-eyebrow { color: var(--acid); }
 #tecnologia .section-heading { color: var(--paper); }
 .tech-bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: auto auto; gap: 2px; }
-.tech-cell { background: rgba(255,255,255,0.04); padding: 2rem; border: 1px solid rgba(255,255,255,0.06); transition: background 0.3s, border-color 0.3s; }
+.tech-cell { background: rgba(255,255,255,0.04); padding: 2.5rem; border: 1px solid rgba(255,255,255,0.06); transition: background 0.3s, border-color 0.3s; }
 .tech-cell:hover { background: rgba(200,255,0,0.05); border-color: rgba(200,255,0,0.2); }
 .tech-cell.wide { grid-column: span 2; }
 .tech-cell.tall { grid-row: span 2; }
-.tech-cell-icon { font-size: 1.8rem; margin-bottom: 1.25rem; }
-.tech-cell-name { font-size: 15px; font-weight: 500; margin-bottom: 0.5rem; color: var(--paper); }
-.tech-cell-desc { font-size: 12px; font-weight: 300; line-height: 1.7; color: rgba(242,239,232,0.45); }
+.tech-cell-icon { font-size: 2rem; margin-bottom: 1.25rem; }
+.tech-cell-name { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; color: var(--paper); }
+.tech-cell-desc { font-size: 13px; font-weight: 300; line-height: 1.7; color: rgba(242,239,232,0.45); }
 .tech-cell-spec { font-family: var(--font-mono); font-size: 10px; color: var(--acid); margin-top: 1rem; letter-spacing: 0.1em; }
 
 /* =========================================================
    DESIGN THINKING
    ========================================================= */
-#design { background: var(--cream); }
+#design { background: var(--paper); }
 .dt-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 6rem; align-items: start; }
 .dt-steps { display: flex; flex-direction: column; gap: 0; }
 .dt-step { display: grid; grid-template-columns: 80px 1fr; padding: 1.75rem 0; border-bottom: 1px solid rgba(10,10,8,0.08); opacity: 0; transform: translateX(-20px); transition: opacity 0.5s, transform 0.5s; }
@@ -183,17 +204,21 @@ section { position: relative; z-index: 1; padding: 7rem 4rem; }
 /* =========================================================
    FOOTER
    ========================================================= */
-footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; position: relative; z-index: 1; }
+footer { background: var(--ink); color: var(--paper); padding: 6rem 4rem 3rem; position: relative; z-index: 1; }
 .footer-top { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 3rem; }
-.footer-brand { font-family: var(--font-display); font-size: 3rem; line-height: 0.9; letter-spacing: -0.01em; color: var(--paper); }
+.footer-brand { font-family: var(--font-display); font-size: 3.5rem; line-height: 0.9; letter-spacing: -0.01em; color: var(--paper); }
 .footer-brand span { color: var(--acid); }
-.footer-desc { font-size: 12px; font-weight: 300; line-height: 1.8; color: rgba(242,239,232,0.35); margin-top: 1rem; }
+.footer-desc { font-size: 12px; font-weight: 300; line-height: 1.8; color: rgba(242,239,232,0.35); margin-top: 1rem; max-width: 250px;}
 .footer-col-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acid); margin-bottom: 1.5rem; }
-.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
 .footer-links a { font-size: 13px; font-weight: 300; color: rgba(242,239,232,0.45); text-decoration: none; cursor: pointer; transition: color 0.3s; }
 .footer-links a:hover { color: var(--paper); }
 .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
 .footer-copy { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: rgba(242,239,232,0.2); }
+
+/* =========================================================
+   REVEAL ANIMATIONS
+   ========================================================= */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity: 1; transform: none; }
 .reveal-delay-1 { transition-delay: 0.1s; }
@@ -212,22 +237,22 @@ footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; p
 
 <nav>
   <div class="nav-left">Wearables Lab · 2026</div>
-  <div class="nav-center">Bitácora</div>
+  <div class="nav-center">Bitácora General</div>
   <div class="nav-right">
     <a onclick="goTo('timeline')">Sesiones</a>
     <a onclick="goTo('proyectos')">Entregables</a>
     <a onclick="goTo('sensores')">Sensores</a>
-    <a onclick="goTo('design')">Metodología</a>
+    <a onclick="goTo('tecnologia')">Materiales</a>
   </div>
 </nav>
 
 <section id="hero">
   <div class="hero-bg-text">WEAR</div>
-  <div class="hero-index">Clase de Tecnología Corporal<br>Ene–May 2026<br>Ingeniería · Diseño</div>
-  <div class="hero-subtitle">// Bitácora Digital · Clase de Wearables</div>
+  <div class="hero-index">Clase de Tecnología Corporal<br>Ene–May 2026<br>Ingeniería · Diseño de Modas</div>
+  <div class="hero-subtitle">// Bitácora Digital · Laboratorio de Wearables</div>
   <h1 class="hero-title">Cuerpo<br>como <em>Interfaz</em></h1>
   <div class="hero-bottom">
-    <p class="hero-desc">Un registro del proceso creativo y técnico detrás del diseño de dispositivos vestibles — desde electrónica textil hasta prototipos funcionales. Documentación 100% alineada a rúbrica.</p>
+    <p class="hero-desc">Un registro exhaustivo del proceso creativo, experimental y técnico detrás del diseño de dispositivos vestibles. Documentación validada al 100% bajo estándares de rúbrica técnica.</p>
     <div class="hero-stats">
       <div><span class="h-stat-num">8</span><span class="h-stat-label">Sesiones</span></div>
       <div><span class="h-stat-num">03</span><span class="h-stat-label">Entregables</span></div>
@@ -235,6 +260,16 @@ footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; p
     </div>
   </div>
   <div class="scroll-line"><span>Scroll</span><div class="scroll-line-bar"></div></div>
+</section>
+
+<section id="manifiesto">
+  <h2 class="manifesto-text reveal">
+    La tecnología debe integrarse al cuerpo orgánicamente.<br>
+    <em>No al revés.</em>
+  </h2>
+  <p class="manifesto-sub reveal reveal-delay-1">
+    Creemos en prendas que reaccionan, protegen y comunican sin fricción. Donde el diseño de modas utilitario y la ingeniería de hardware convergen para crear una segunda piel conectada.
+  </p>
 </section>
 
 <div class="divider"><span class="divider-label">01 — Sesiones de clase</span></div>
@@ -309,56 +344,56 @@ footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; p
   </div>
 </section>
 
-<div class="divider" style="background: rgba(255,255,255,0.1);"><span class="divider-label" style="background: var(--ink); color: var(--acid);">02 — Centro de Entregables Modulares</span></div>
+<div class="divider" style="background: rgba(10,10,8,0.1);"><span class="divider-label" style="background: var(--paper); color: var(--rust);">02 — Centro de Entregables Modulares</span></div>
 
 <section id="proyectos">
-  <div class="projects-intro">
+  <div class="projects-intro reveal">
     <div>
       <div class="section-eyebrow">// Evaluaciones según rúbrica</div>
       <h2 class="section-heading">Prototipos<br>& Dossier</h2>
     </div>
     <p class="projects-intro-text">
-      Acceso directo al contenido modular solicitado para evaluación. Haz clic en las tarjetas para navegar por las Prácticas de E-textiles, la Bitácora del Proyecto Final y el Dossier Técnico.
+      Acceso directo al contenido modular solicitado para evaluación. Haz clic en las tarjetas para navegar a las páginas independientes correspondientes al Proyecto Final, las Prácticas y el Dossier de Investigación Técnica.
     </p>
   </div>
 
-  <div class="projects-grid">
+  <div class="projects-grid reveal reveal-delay-1">
     <a class="project-tile" href="proyecto-chaleco.html">
       <div class="tile-inner">
         <div class="tile-num">01 / PROYECTO FINAL</div>
-        <div class="tile-category">Bitácora Web · 10%</div>
+        <div class="tile-category">Bitácora Web · 10 Puntos</div>
         <h3 class="tile-title">WEARAVEST<br>Chaleco<br>Inteligente</h3>
-        <p class="tile-desc">Chaleco funcional con LEDs de visibilidad y alerta GPS vía Telegram. Incluye Concepto, Metodología, Manufactura y Evidencia.</p>
+        <p class="tile-desc">Chaleco outdoor equipado con ESP32 S3, LEDs controlados por App y GPS Neo-6M integrado con la API de Telegram. Memoria del proceso constructivo.</p>
         <div class="tile-tags-row">
-          <span class="tile-tag">10 Puntos</span><span class="tile-tag">LEDs</span><span class="tile-tag">Confección</span>
+          <span class="tile-tag">10 Puntos</span><span class="tile-tag">Electrónica Textil</span><span class="tile-tag">Diseño de Modas</span>
         </div>
-        <div class="tile-arrow">Ver proyecto final →</div>
+        <div class="tile-arrow">Ver bitácora de proyecto →</div>
       </div>
     </a>
 
     <a class="project-tile" href="proyecto-pulsera.html">
       <div class="tile-inner">
         <div class="tile-num">02 / PRÁCTICAS E-TEXTILE</div>
-        <div class="tile-category">Pulseras & Bordado · 20%</div>
+        <div class="tile-category">Pulseras & Bordado · 20% + Extra</div>
         <h3 class="tile-title">Pulseras<br>Interactivas<br>& Bordado</h3>
-        <p class="tile-desc">Documentación técnica de Práctica 1 (Hilo Conductor), Práctica 2 (Microcontrolador) y Práctica 3 (Bordado/Estampado).</p>
+        <p class="tile-desc">Documentación técnica de Práctica 1 (Hilo Conductor como PCB), Práctica 2 (Microcontrolador) y Práctica 3 (Técnicas de Bordado y Estampado).</p>
         <div class="tile-tags-row">
-          <span class="tile-tag">20 Puntos</span><span class="tile-tag">Electrónica Textil</span>
+          <span class="tile-tag">20 Puntos</span><span class="tile-tag">Hilo de Acero</span><span class="tile-tag">Circuitos Flexibles</span>
         </div>
-        <div class="tile-arrow">Ver prácticas →</div>
+        <div class="tile-arrow">Ver reporte de prácticas →</div>
       </div>
     </a>
 
     <a class="project-tile" href="documentacion.html">
       <div class="tile-inner">
-        <div class="tile-num">03 / DOCUMENTACIÓN TÉCNICA</div>
-        <div class="tile-category">Dossier Técnico · 30%</div>
+        <div class="tile-num">03 / INVESTIGACIÓN TÉCNICA</div>
+        <div class="tile-category">Dossier Técnico · 30 Puntos</div>
         <h3 class="tile-title">Memoria<br>Técnica &<br>Procesos</h3>
-        <p class="tile-desc">Documentación extendida del proyecto: Investigación de usuario, Costos, Cronograma, Ficha técnica e Iteraciones 2D/3D.</p>
+        <p class="tile-desc">Documentación profunda del WEARAVEST: Fallos experimentales (GSM/Térmicos), Análisis de usuario, Costos, Ficha de hardware e Iteraciones 2D/3D.</p>
         <div class="tile-tags-row">
-          <span class="tile-tag">30 Puntos</span><span class="tile-tag">Design Thinking</span><span class="tile-tag">Planos</span>
+          <span class="tile-tag">30 Puntos</span><span class="tile-tag">UX Research</span><span class="tile-tag">Diario Técnico</span>
         </div>
-        <div class="tile-arrow">Ver dossier técnico →</div>
+        <div class="tile-arrow">Ver memoria técnica y procesos →</div>
       </div>
     </a>
   </div>
@@ -372,7 +407,7 @@ footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; p
       <div class="section-eyebrow">// Mundo físico → digital</div>
       <h2 class="section-heading">Tipos de<br>Sensores</h2>
       <p style="font-size:14px; font-weight:300; line-height:1.85; color:rgba(10,10,8,0.55); max-width:380px; font-style:italic;">
-        Un sensor convierte algo continuo, caótico y humano en valores que una máquina puede procesar — una escala de voltaje que se traduce en números.
+        Un sensor convierte algo continuo, caótico y humano en valores que una máquina puede procesar — una escala de voltaje que se traduce en números discretos.
       </p>
     </div>
     <div class="sensor-cols reveal">
@@ -439,45 +474,45 @@ footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; p
 <div class="divider"><span class="divider-label">04 — Materiales</span></div>
 
 <section id="tecnologia">
-  <div class="section-eyebrow">// Materiales y componentes</div>
+  <div class="section-eyebrow">// Hardware Textil y Actuadores</div>
   <h2 class="section-heading reveal">Tecnología<br>Textil</h2>
   <div class="tech-bento reveal reveal-delay-1">
     <div class="tech-cell wide tall">
       <div class="tech-cell-icon">🧵</div>
       <div class="tech-cell-name">Hilo Conductivo de Acero Inoxidable</div>
-      <div class="tech-cell-desc">Fabricado con fibras de acero inoxidable trenzadas en 2–3 capas. Funciona como cable flexible cosido directamente al textil. Más grueso que poliéster pero cosible a mano con agujas de ojo mediano.</div>
-      <div class="tech-cell-spec">10 Ω/pie · &lt;100 mA · adafruit.com/641</div>
+      <div class="tech-cell-desc">Fabricado con fibras de acero trenzadas. Transforma la tela en una placa de circuito impreso (PCB) flexible. Es cosible a mano con agujas estándar y permite transferir señales eléctricas sin romperse con el movimiento del cuerpo humano.</div>
+      <div class="tech-cell-spec">Resistencia: 10 Ω/pie · Tolerancia: &lt;100 mA</div>
     </div>
     <div class="tech-cell">
       <div class="tech-cell-icon">🖨️</div>
       <div class="tech-cell-name">Tintas Conductivas</div>
-      <div class="tech-cell-desc">Aplicadas por serigrafía. Permiten circuitos flexibles y sensores de presión/flexión sobre tela.</div>
+      <div class="tech-cell-desc">Aplicadas mediante mallas de serigrafía. Permiten estampar circuitos flexibles directamente sobre fibras naturales.</div>
     </div>
     <div class="tech-cell">
       <div class="tech-cell-icon">🔋</div>
-      <div class="tech-cell-name">Batería LiPo</div>
-      <div class="tech-cell-desc">Fuente de energía compacta y recargable. Clave para autonomía en dispositivos vestibles.</div>
+      <div class="tech-cell-name">Baterías LiPo Alta Tasa</div>
+      <div class="tech-cell-desc">Fuente de energía compacta. Clave para alimentar sistemas robustos como el ESP32 S3 y matrices LED sin perder autonomía.</div>
     </div>
     <div class="tech-cell">
       <div class="tech-cell-icon">🤸</div>
-      <div class="tech-cell-name">Elastómeros</div>
-      <div class="tech-cell-desc">Ecoflex y DragonSkin: 1000% de elongación a la rotura. Para estructuras suaves y actuadores.</div>
-      <div class="tech-cell-spec">Estira hasta 10x su longitud original</div>
+      <div class="tech-cell-name">Elastómeros Especiales</div>
+      <div class="tech-cell-desc">Siliconas como Ecoflex o DragonSkin que alcanzan el 1000% de elongación antes de la rotura para robótica suave.</div>
+      <div class="tech-cell-spec">Estiran hasta 10x su longitud original</div>
     </div>
     <div class="tech-cell">
       <div class="tech-cell-icon">⚡</div>
-      <div class="tech-cell-name">LEDs NeoPixel</div>
-      <div class="tech-cell-desc">Tiras programables para secuencias de luz. Integradas al textil con hilo conductor.</div>
+      <div class="tech-cell-name">LEDs RGB Controlables</div>
+      <div class="tech-cell-desc">Tiras programables con direccionamiento individual. Integrables al textil mediante hilo de acero y control por App.</div>
     </div>
     <div class="tech-cell">
       <div class="tech-cell-icon">📡</div>
-      <div class="tech-cell-name">Módulo GPS/GSM</div>
-      <div class="tech-cell-desc">Para alertas de ubicación. Envía posición aproximada vía bot de Telegram en emergencias.</div>
+      <div class="tech-cell-name">Conectividad y Localización</div>
+      <div class="tech-cell-desc">Uso de antenas WiFi/Bluetooth nativas en el MCU, operando en paralelo con módulos GPS satelitales (Neo-6M).</div>
     </div>
     <div class="tech-cell">
       <div class="tech-cell-icon">🧠</div>
-      <div class="tech-cell-name">Polímeros EAPs</div>
-      <div class="tech-cell-desc">Cambian de forma ante campo eléctrico. IPMCs requieren bajo voltaje y generan grandes deformaciones.</div>
+      <div class="tech-cell-name">Polímeros Activos (EAPs)</div>
+      <div class="tech-cell-desc">Materiales que cambian de forma y volumen ante la exposición a un campo eléctrico (músculos artificiales).</div>
     </div>
   </div>
 </section>
@@ -494,35 +529,35 @@ footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; p
           <div class="dt-step-num">01</div>
           <div class="dt-step-content">
             <div class="dt-step-name">Descubrir</div>
-            <div class="dt-step-desc">Observar con mente abierta. Identificar qué hacen las personas, cómo lo hacen y por qué. Buscar patrones y lo inesperado.</div>
+            <div class="dt-step-desc">Observar el entorno con mente abierta. Identificar problemas en actividades de campo (hiking, emergencias nocturnas).</div>
           </div>
         </div>
         <div class="dt-step">
           <div class="dt-step-num">02</div>
           <div class="dt-step-content">
             <div class="dt-step-name">Interpretar</div>
-            <div class="dt-step-desc">Recolectar descubrimientos y desarrollar insights. Construir el POV: Usuario + Necesidad + Descubrimiento interesante.</div>
+            <div class="dt-step-desc">Recolectar descubrimientos y desarrollar insights. Construir el POV (Point of View) del usuario final.</div>
           </div>
         </div>
         <div class="dt-step">
           <div class="dt-step-num">03</div>
           <div class="dt-step-content">
             <div class="dt-step-name">Idear</div>
-            <div class="dt-step-desc">Preguntar ¿Cómo podríamos…? Generar múltiples soluciones sin filtros. Cantidad antes que calidad.</div>
+            <div class="dt-step-desc">Responder a la pregunta ¿Cómo podríamos...? Generando soluciones sin filtro técnico limitante inicial.</div>
           </div>
         </div>
         <div class="dt-step">
           <div class="dt-step-num">04</div>
           <div class="dt-step-content">
             <div class="dt-step-name">Experimentar</div>
-            <div class="dt-step-desc">Prototipar rápido y barato. Fallar pronto para aprender. Pulseras, patrones, pruebas de LEDs.</div>
+            <div class="dt-step-desc">Prototipar rápido. Poner a prueba materiales (Tintas, GSM, ESP32). Fallar pronto para aprender barato.</div>
           </div>
         </div>
         <div class="dt-step">
           <div class="dt-step-num">05</div>
           <div class="dt-step-content">
             <div class="dt-step-name">Evolucionar</div>
-            <div class="dt-step-desc">No es lineal. Cada iteración informa la siguiente. El proceso es cíclico y continuo.</div>
+            <div class="dt-step-desc">Aceptar que el diseño no es lineal. Iterar la prenda textil (patronaje) en función de las exigencias electrónicas.</div>
           </div>
         </div>
       </div>
@@ -531,13 +566,12 @@ footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; p
     <div class="dt-insight reveal">
       <div class="dt-insight-label">// El triángulo de la innovación</div>
       <div class="dt-insight-formula">
-        <strong>Deseable</strong> — ¿Qué tanto lo quieren las personas?<br><br>
-        <strong>Factible</strong> — ¿Podemos construirlo técnicamente?<br><br>
-        <strong>Viable</strong> — ¿Tenemos los recursos para sostenerlo?
+        <strong>Deseable (Humanos)</strong> — ¿Resuelve un problema real?<br><br>
+        <strong>Factible (Tecnología)</strong> — ¿Podemos programarlo y coserlo?<br><br>
+        <strong>Viable (Negocio)</strong> — ¿El costo justifica el producto final?
       </div>
       <div class="dt-insight-quote">
-        "Si los 3 factores no convergen, solo tienes creatividad. La intersección de los tres es innovación."<br><br>
-        Insight: Las personas que hacen actividades outdoor valoran la seguridad sin sacrificar libertad de movimiento. La naturaleza enriquece la experiencia y el bienestar.
+        "La tecnología vestible no es pegar un Arduino a una playera. Es hacer que la placa de silicio y la fibra de algodón dialoguen en el mismo idioma para empoderar al usuario."
       </div>
     </div>
   </div>
@@ -547,38 +581,41 @@ footer { background: var(--ink); color: var(--paper); padding: 5rem 4rem 3rem; p
   <div class="footer-top">
     <div>
       <div class="footer-brand">WEAR<span>LAB</span></div>
-      <p class="footer-desc">Bitácora digital de la clase de Tecnología Corporal y Dispositivos Vestibles. Diseño e Ingeniería, 2026.</p>
+      <p class="footer-desc">Bitácora oficial de la clase de Tecnología Corporal y Dispositivos Vestibles. Generación 2026. UDEM.</p>
     </div>
     <div>
-      <div class="footer-col-title">// Secciones</div>
+      <div class="footer-col-title">// Índice General</div>
       <ul class="footer-links">
-        <li><a onclick="goTo('timeline')">Sesiones de clase</a></li>
-        <li><a onclick="goTo('proyectos')">Proyectos y Entregables</a></li>
-        <li><a onclick="goTo('sensores')">Sensores</a></li>
-        <li><a onclick="goTo('tecnologia')">Materiales</a></li>
-        <li><a onclick="goTo('design')">Design Thinking</a></li>
+        <li><a onclick="goTo('timeline')">Sesiones de Laboratorio</a></li>
+        <li><a onclick="goTo('proyectos')">Panel de Entregables</a></li>
+        <li><a onclick="goTo('sensores')">Clasificación de Sensores</a></li>
+        <li><a onclick="goTo('tecnologia')">Materiales E-Textile</a></li>
+        <li><a onclick="goTo('design')">Framework Design Thinking</a></li>
       </ul>
     </div>
     <div>
-      <div class="footer-col-title">// Evaluación</div>
+      <div class="footer-col-title">// Evaluaciones (Rúbrica)</div>
       <ul class="footer-links">
-        <li><a href="proyecto-chaleco.html">Proyecto Final (Bitácora)</a></li>
-        <li><a href="proyecto-pulsera.html">Prácticas E-Textile</a></li>
-        <li><a href="documentacion.html">Dossier Técnico</a></li>
+        <li><a href="proyecto-chaleco.html">Proyecto Final (Bitácora Web)</a></li>
+        <li><a href="proyecto-pulsera.html">Prácticas Textiles (Pulseras)</a></li>
+        <li><a href="documentacion.html">Dossier Técnico (Memoria y Procesos)</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span class="footer-copy">© 2026 · Wearables Lab · Bitácora Digital</span>
-    <span class="footer-copy">Tecnología Corporal · UDEM</span>
+    <span class="footer-copy">© 2026 · Wearables Lab · Bitácora Digital Completa</span>
+    <span class="footer-copy">Diseño e Ingeniería</span>
   </div>
 </footer>
 
 <script>
+/* CURSOR & INTERACTIONS */
 const dot  = document.getElementById('cursor-dot');
 const ring = document.getElementById('cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
+
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
 function animCursor() {
   dot.style.left = mx + 'px'; dot.style.top = my + 'px';
   rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
@@ -586,15 +623,25 @@ function animCursor() {
   requestAnimationFrame(animCursor);
 }
 animCursor();
+
 document.querySelectorAll('a, button, [onclick]').forEach(el => {
-  el.addEventListener('mouseenter', () => { dot.style.width = '16px'; dot.style.height = '16px'; ring.style.width = '48px'; ring.style.height = '48px'; });
-  el.addEventListener('mouseleave', () => { dot.style.width = '8px'; dot.style.height = '8px'; ring.style.width = '32px'; ring.style.height = '32px'; });
+  el.addEventListener('mouseenter', () => {
+    dot.style.width = '16px'; dot.style.height = '16px';
+    ring.style.width = '48px'; ring.style.height = '48px';
+  });
+  el.addEventListener('mouseleave', () => {
+    dot.style.width = '8px'; dot.style.height = '8px';
+    ring.style.width = '32px'; ring.style.height = '32px';
+  });
 });
+
+/* SCROLL PROGRESS & REVEALS */
 window.addEventListener('scroll', () => {
   const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
   document.getElementById('pbar').style.width = pct + '%';
   checkReveal();
 });
+
 function checkReveal() {
   document.querySelectorAll('.reveal, .dt-step').forEach(el => {
     const r = el.getBoundingClientRect();
@@ -602,7 +649,11 @@ function checkReveal() {
   });
 }
 setTimeout(checkReveal, 200);
-function goTo(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+
+/* SMOOTH SCROLL NAV */
+function goTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 </body>
 </html>
