@@ -163,6 +163,76 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
 
 @keyframes slide-up { from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none} }
 @keyframes led-blink { 0%,100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } }
+/* =========================================================
+   DISEÑO RESPONSIVO (MÓVILES Y TABLETS)
+   ========================================================= */
+@media (max-width: 992px) {
+  /* Ajuste de paddings en contenedores principales */
+  section { padding: 4rem 1.5rem; }
+  #hero { padding: 8rem 1.5rem 3rem; justify-content: center; }
+  .divider-label { left: 1.5rem; }
+  
+  /* Menú de navegación colapsado */
+  nav { 
+    grid-template-columns: 1fr; 
+    gap: 1rem; 
+    padding: 1.5rem; 
+    background: var(--paper); 
+    border-bottom: 1px solid rgba(10,10,8,0.05); 
+  }
+  .nav-left { display: none; } /* Ocultar para limpiar el espacio visual */
+  .nav-center { text-align: left; }
+  .nav-right { justify-content: flex-start; flex-wrap: wrap; gap: 1rem; }
+  
+  /* Magia Responsiva: Colapsar TODAS las grillas a 1 sola columna */
+  .hero-bottom-row, .hero-bottom, .projects-intro, .projects-grid, 
+  .sensors-layout, .sensor-cols, .flow-row, .tech-bento, 
+  .dt-layout, .footer-top, .concept-grid, .versions-grid, 
+  .circuit-notes, .process-layout, .materials-row, .evidencia-grid, 
+  .overview-grid, .tech-specs-grid, .process-steps, .materials-table, 
+  .research-grid, .empathy-map, .log-assets, .logistics-grid, 
+  .tech-sheet, .user-layout {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+  
+  /* Ajustes para tarjetas que abarcaban más de una columna */
+  .tech-cell.wide, .tech-cell.tall, .iter-card[style*="span 3"] {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+  }
+  
+  /* Ajuste de tipografías gigantes en el Hero */
+  .hero-bg-text { font-size: 25vw; bottom: 5%; right: -5%; opacity: 0.2; }
+  .hero-title { font-size: clamp(3.5rem, 15vw, 5rem); margin-bottom: 2rem; line-height: 0.9; }
+  .hero-tag { position: relative; top: 0; right: 0; text-align: left; margin-bottom: 2rem; }
+  .hero-stats { justify-content: flex-start; flex-wrap: wrap; gap: 2rem; text-align: left; }
+  .hero-index { position: relative; top: 0; right: 0; text-align: left; margin-bottom: 2rem; }
+  
+  /* Bitácora de Sesiones (Timeline) */
+  .tl-grid { grid-template-columns: 1fr; }
+  .tl-date-col { text-align: left; padding: 1rem 0; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .tl-date-col::after { display: none; }
+  .tl-content-col { padding: 1rem 0 2.5rem 0; }
+  
+  /* Dossier Técnico y Memoria */
+  .user-card { position: relative; top: 0; }
+  .log-container { padding-left: 0; border-left: none; margin-left: 0; }
+  .log-entry::before { display: none; }
+  
+  /* Tablas responsivas (permite hacer scroll horizontal si la tabla es ancha) */
+  .table-ui { display: block; overflow-x: auto; white-space: nowrap; }
+  .comp-table { display: block; overflow-x: auto; white-space: nowrap; }
+  
+  /* Botones y Footer */
+  .footer-bottom { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .back-section { flex-direction: column; align-items: flex-start; gap: 2rem; padding: 3rem 1.5rem; }
+  .back-section > div { text-align: left !important; }
+  
+  /* Ocultar el cursor personalizado en celulares (causa problemas en pantallas táctiles) */
+  .cursor-dot, .cursor-ring { display: none !important; }
+  body { cursor: auto; }
+}
 </style>
 </head>
 <body>
