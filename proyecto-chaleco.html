@@ -6,6 +6,9 @@
 <title>WEARAVEST (Chaleco Inteligente) — Wearables Lab</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+/* =========================================================
+   ROOT & RESET
+   ========================================================= */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -46,7 +49,9 @@ body::before {
 
 .progress-bar { position:fixed;top:0;left:0;height:2px;background:var(--olive);z-index:1000;width:0%;transition:width .05s; }
 
-/* NAV */
+/* =========================================================
+   NAV
+   ========================================================= */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -78,7 +83,9 @@ nav {
   text-transform: uppercase;
 }
 
-/* HERO */
+/* =========================================================
+   HERO
+   ========================================================= */
 #hero {
   min-height: 100vh;
   background: var(--olive);
@@ -164,7 +171,9 @@ h1.hero-title {
   color: var(--paper);
 }
 
-/* SECTIONS */
+/* =========================================================
+   SECTIONS
+   ========================================================= */
 section { position: relative; z-index: 1; padding: 6rem 4rem; }
 
 .section-eyebrow {
@@ -184,7 +193,9 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
 .divider { width:100%;height:1px;background:rgba(10,10,8,0.1);position:relative;z-index:1; }
 .divider-label { position:absolute;top:50%;left:4rem;transform:translateY(-50%);background:var(--paper);padding:0 1rem;font-family:var(--font-mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--rust); }
 
-/* OVERVIEW */
+/* =========================================================
+   OVERVIEW
+   ========================================================= */
 #overview { background: var(--paper); }
 .overview-grid {
   display: grid;
@@ -218,7 +229,9 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
 }
 .spec-val { font-weight: 400; color: var(--ink); }
 
-/* USER PROFILE */
+/* =========================================================
+   USER PROFILE
+   ========================================================= */
 #usuario { background: var(--cream); }
 .user-layout {
   display: grid;
@@ -325,7 +338,9 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
   display: block;
 }
 
-/* MARKET */
+/* =========================================================
+   MARKET & COSTOS
+   ========================================================= */
 #mercado { background: var(--paper); }
 .market-layout {
   display: grid;
@@ -382,7 +397,9 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
 .ci-label { opacity: 0.5; font-weight: 300; }
 .ci-val { font-family: var(--font-mono); font-size: 11px; }
 
-/* PROCESS */
+/* =========================================================
+   PROCESS & ITERATIONS
+   ========================================================= */
 #proceso { background: var(--slate); color: var(--paper); }
 #proceso .section-eyebrow { color: var(--acid); }
 #proceso .section-heading { color: var(--paper); }
@@ -448,7 +465,30 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
 }
 .mat-item::before { content: '·  '; color: var(--acid); }
 
-/* TECH SPECS */
+/* GRID PARA EVIDENCIA / ITERACIONES */
+.evidencia-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-top: 4rem;
+}
+.evidencia-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255,255,255,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  min-height: 180px;
+}
+.evidencia-icon { font-size: 1.5rem; opacity: 0.5; margin-bottom: 1rem; }
+.evidencia-text { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; color: var(--acid); text-transform: uppercase; }
+
+/* =========================================================
+   TECH SPECS
+   ========================================================= */
 #tecnica { background: var(--cream); }
 .tech-specs-grid {
   display: grid;
@@ -491,7 +531,29 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
 }
 .ts-card.dark .ts-item::before { color: var(--acid); }
 
-/* BACK LINK */
+/* =========================================================
+   CONCLUSIONES Y EVIDENCIA FINAL (RUBRICA 30%)
+   ========================================================= */
+#resultados { background: var(--ink); color: var(--paper); }
+#resultados .section-eyebrow { color: var(--acid); }
+#resultados .section-heading { color: var(--paper); }
+
+.conclusion-block {
+  background: rgba(255,255,255,0.03);
+  padding: 3rem;
+  border-left: 2px solid var(--rust);
+  margin-top: 3rem;
+}
+.conclusion-title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--paper);
+}
+
+/* =========================================================
+   BACK LINK
+   ========================================================= */
 .back-section {
   background: var(--ink);
   padding: 4rem;
@@ -500,6 +562,7 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
   justify-content: space-between;
   position: relative;
   z-index: 1;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 .back-link {
   font-family: var(--font-display);
@@ -541,10 +604,9 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
 
 <nav>
   <a href="index.html" class="nav-back">← Bitácora</a>
-  <div class="nav-title">Proyecto 01</div>
+  <div class="nav-title">Proyecto Final</div>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
   <div class="hero-bg-text">VEST</div>
   <div class="hero-tag">
@@ -552,7 +614,7 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
     <span>Seguridad · Visibilidad</span>
     <span>GPS · LEDs · Textil</span>
   </div>
-  <div class="hero-eyebrow">// Proyecto 01 — Wearable Outdoor</div>
+  <div class="hero-eyebrow">// Proyecto Final — Bitácora Web y Dossier Técnico</div>
   <h1 class="hero-title">WEARAVEST<br>Chaleco<br>Inteligente</h1>
   <div class="hero-bottom-row">
     <div>
@@ -570,18 +632,16 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
   </div>
 </section>
 
-<!-- DIVIDER -->
-<div class="divider"><span class="divider-label">01 — Descripción</span></div>
+<div class="divider"><span class="divider-label">01 — Concepto e Intención de Diseño (10%)</span></div>
 
-<!-- OVERVIEW -->
 <section id="overview">
   <div class="section-eyebrow">// Qué es y qué resuelve</div>
   <h2 class="section-heading reveal">El Chaleco</h2>
   <div class="overview-grid">
     <div class="overview-text reveal">
       <p>Un chaleco funcional diseñado para personas que hacen actividades outdoor — <strong>hiking, senderismo, acampado y días en la naturaleza</strong> — que necesitan más seguridad sin sacrificar libertad de movimiento.</p>
-      <p>Integra <strong>iluminación LED</strong> para visibilidad en condiciones de poca luz y un sistema de <strong>alerta de ubicación vía Telegram</strong> para que el usuario pueda avisar su posición en caso de emergencia, sin necesitar tener el celular en mano.</p>
-      <p>El chaleco no es solo una prenda. Es una herramienta que permite disfrutar la naturaleza con mayor <strong>tranquilidad, autonomía y seguridad</strong>.</p>
+      <p>Nuestra <strong>intención de diseño (Concepto)</strong> es integrar <strong>iluminación LED</strong> para visibilidad en condiciones de poca luz y un sistema de <strong>alerta de ubicación vía Telegram</strong> para que el usuario pueda avisar su posición en caso de emergencia, sin necesitar tener el celular en la mano ni interrumpir su conexión con la naturaleza.</p>
+      <p>El chaleco no es solo una prenda. Es una herramienta que permite disfrutar del entorno con mayor <strong>tranquilidad, autonomía y seguridad</strong>.</p>
     </div>
     <ul class="spec-list reveal reveal-delay-1">
       <li class="spec-row">
@@ -624,16 +684,14 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
   </div>
 </section>
 
-<!-- DIVIDER -->
-<div class="divider"><span class="divider-label">02 — Usuario</span></div>
+<div class="divider"><span class="divider-label">02 — Investigación y Planteamiento del Problema (30%)</span></div>
 
-<!-- USER -->
 <section id="usuario">
-  <div class="section-eyebrow">// Perfil de usuario</div>
+  <div class="section-eyebrow">// Perfil de usuario y Análisis</div>
   <h2 class="section-heading reveal">¿Para Quién<br>Es?</h2>
   <div class="user-layout">
     <div class="user-card reveal">
-      <div class="user-card-label">// Perfil primario</div>
+      <div class="user-card-label">// Análisis de usuario final</div>
       <div class="user-avatar">JR</div>
       <div class="user-name">Jorge<br>Ramírez</div>
       <div class="user-role">48 años · Outdoor enthusiast</div>
@@ -646,12 +704,8 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
         Senderismo, hiking, salidas a la naturaleza los fines de semana
       </div>
       <div class="user-detail">
-        <strong>Situación</strong>
-        Casado, dos hijos adolescentes. Vive en zona urbana pero busca el exterior regularmente.
-      </div>
-      <div class="user-detail">
-        <strong>Dolor clave</strong>
-        Ha caminado de noche sin visibilidad. Su familia no sabe dónde está. Necesita seguridad sin burocracia.
+        <strong>Planteamiento del Problema</strong>
+        Ha caminado de noche sin visibilidad. Su familia no sabe dónde está. Necesita seguridad sin la fricción ni la distracción de un teléfono inteligente convencional.
       </div>
     </div>
 
@@ -686,13 +740,11 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
   </div>
 </section>
 
-<!-- DIVIDER -->
-<div class="divider"><span class="divider-label">03 — Mercado</span></div>
+<div class="divider"><span class="divider-label">03 — Análisis de Costos y Cronograma (15%)</span></div>
 
-<!-- MARKET -->
 <section id="mercado">
-  <div class="section-eyebrow">// Contexto de mercado</div>
-  <h2 class="section-heading reveal">Mercado &<br>Costos</h2>
+  <div class="section-eyebrow">// Contexto y Logística</div>
+  <h2 class="section-heading reveal">Mercado &<br>Planificación</h2>
 
   <div class="market-layout reveal reveal-delay-1">
     <div class="market-cell">
@@ -714,9 +766,9 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
 
   <div class="cost-layout reveal reveal-delay-2">
     <div class="cost-block">
-      <div class="cost-label-small">// Costo de producción</div>
+      <div class="cost-label-small">// Desglose de Costo de producción</div>
       <div class="cost-big">$2,150</div>
-      <div class="cost-sub">MXN promedio estimado</div>
+      <div class="cost-sub">MXN promedio estimado del prototipo</div>
       <ul class="cost-items">
         <li class="ci"><span class="ci-label">Telas (gabardina, popelina, mesh)</span><span class="ci-val">~$400</span></li>
         <li class="ci"><span class="ci-label">Componentes electrónicos</span><span class="ci-val">~$800</span></li>
@@ -725,27 +777,27 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
         <li class="ci"><span class="ci-label">Programación y pruebas</span><span class="ci-val">~$300</span></li>
       </ul>
     </div>
+    
     <div class="cost-block light">
-      <div class="cost-label-small">// Precio de venta estimado</div>
-      <div class="cost-big">$5,000</div>
-      <div class="cost-sub">MXN rango: $3,500 — $6,500</div>
+      <div class="cost-label-small">// Cronograma de Actividades</div>
+      <div class="cost-big">5 Fases</div>
+      <div class="cost-sub">Planificación y tiempos del proyecto</div>
       <ul class="cost-items">
-        <li class="ci"><span class="ci-label">Canales de distribución</span><span class="ci-val" style="font-family:var(--font-body)">Outdoor / Camping</span></li>
-        <li class="ci"><span class="ci-label">E-commerce</span><span class="ci-val" style="font-family:var(--font-body)">MercadoLibre, Amazon</span></li>
-        <li class="ci"><span class="ci-label">Tiendas especializadas</span><span class="ci-val" style="font-family:var(--font-body)">Deportivo / Tech</span></li>
-        <li class="ci"><span class="ci-label">Mercado secundario</span><span class="ci-val" style="font-family:var(--font-body)">Campismo, escalada</span></li>
+        <li class="ci"><span class="ci-label">1. Investigación de Usuario / Design Thinking</span><span class="ci-val" style="font-family:var(--font-body)">Sem 1-2</span></li>
+        <li class="ci"><span class="ci-label">2. Patronaje Textil (Planos 2D)</span><span class="ci-val" style="font-family:var(--font-body)">Sem 3</span></li>
+        <li class="ci"><span class="ci-label">3. Esquemas y Simulación Electrónica</span><span class="ci-val" style="font-family:var(--font-body)">Sem 4</span></li>
+        <li class="ci"><span class="ci-label">4. Corte, Costura e Integración Textil</span><span class="ci-val" style="font-family:var(--font-body)">Sem 5-6</span></li>
+        <li class="ci"><span class="ci-label">5. Pruebas y Evidencia Final</span><span class="ci-val" style="font-family:var(--font-body)">Sem 7</span></li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- DIVIDER -->
-<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--slate);color:var(--acid);">04 — Proceso</span></div>
+<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--slate);color:var(--acid);">04 — Proceso de Manufactura e Iteraciones (40%)</span></div>
 
-<!-- PROCESS -->
 <section id="proceso">
   <div class="section-eyebrow">// De la idea al prototipo</div>
-  <h2 class="section-heading reveal">Proceso de<br>Fabricación</h2>
+  <h2 class="section-heading reveal">Fabricación<br>& Iteraciones</h2>
 
   <div class="process-steps reveal reveal-delay-1">
     <div class="process-step">
@@ -812,11 +864,9 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
     <div class="mat-cell">
       <div class="mat-category">// Electrónica</div>
       <ul class="mat-items">
-        <li class="mat-item">Tira de luces LED</li>
-        <li class="mat-item">Módulo de localización GPS</li>
-        <li class="mat-item">Batería recargable</li>
-        <li class="mat-item">Botón táctil físico</li>
-        <li class="mat-item">Cables y conectores</li>
+        <li class="mat-item">Tira de luces LED y Módulo de localización GPS</li>
+        <li class="mat-item">Código fuente (Librería TinyGPS++, API REST HTTP)</li>
+        <li class="mat-item">Botón táctil físico, cables, placa de control y Batería</li>
       </ul>
     </div>
     <div class="mat-cell">
@@ -824,64 +874,105 @@ section { position: relative; z-index: 1; padding: 6rem 4rem; }
       <ul class="mat-items">
         <li class="mat-item">Hilo verde y blanco</li>
         <li class="mat-item">Cierres y broches</li>
-        <li class="mat-item">Alfileres</li>
-        <li class="mat-item">Tijeras de tela</li>
         <li class="mat-item">Máquina de coser industrial</li>
       </ul>
     </div>
   </div>
-</section>
 
-<!-- DIVIDER -->
-<div class="divider"><span class="divider-label">05 — Especificaciones técnicas</span></div>
-
-<!-- TECH -->
-<section id="tecnica">
-  <div class="section-eyebrow">// Requisitos del proyecto</div>
-  <h2 class="section-heading reveal">Especificaciones<br>Técnicas</h2>
-  <div class="tech-specs-grid reveal reveal-delay-1">
-    <div class="ts-card dark">
-      <div class="ts-title">// Electrónica e integración</div>
-      <ul class="ts-list">
-        <li class="ts-item">LEDs integrados directamente a la tela, no montados externamente como objeto rígido</li>
-        <li class="ts-item">Módulo GPS que obtiene coordenadas aproximadas y las envía a Telegram vía bot</li>
-        <li class="ts-item">Botón físico accesible sin sacar el celular — activación de alerta en un toque</li>
-        <li class="ts-item">Batería recargable con autonomía para una jornada completa de hiking</li>
-        <li class="ts-item">Cables y conectores ocultos dentro del forro del chaleco</li>
-      </ul>
+  <div class="evidencia-grid reveal reveal-delay-2">
+    <div class="evidencia-card">
+      <div class="evidencia-icon">📐</div>
+      <div class="evidencia-text">Insertar Documento: Planos 2D y Patronaje</div>
     </div>
-    <div class="ts-card">
-      <div class="ts-title">// Construcción textil</div>
-      <ul class="ts-list">
-        <li class="ts-item">Patronaje en talla L con modificaciones de sisa para mayor holgura y rango de movimiento</li>
-        <li class="ts-item">Forro doble de popelina negra y mesh verde para transpirabilidad en actividad física</li>
-        <li class="ts-item">Dos bolsas tipo cargo con tapas y costuras de carga para equipo y accesorios</li>
-        <li class="ts-item">Bolsa interior dedicada para alojar la parte electrónica de forma segura y accesible</li>
-        <li class="ts-item">Parches bordados y estampados integrados como elementos de diseño visual</li>
-      </ul>
+    <div class="evidencia-card">
+      <div class="evidencia-icon">💻</div>
+      <div class="evidencia-text">Insertar Imagen: Diseños y Simulaciones 3D</div>
     </div>
-    <div class="ts-card">
-      <div class="ts-title">// Diseño y ergonomía</div>
-      <ul class="ts-list">
-        <li class="ts-item">Sin bordes rígidos ni componentes que interrumpan el movimiento natural del cuerpo</li>
-        <li class="ts-item">Diseño outdoor con estética funcional — colores que se integran a entornos naturales</li>
-        <li class="ts-item">Peso distribuido equitativamente para uso prolongado en hiking</li>
-        <li class="ts-item">Resistencia básica a condiciones de exterior (polvo, roce de vegetación)</li>
-      </ul>
+    <div class="evidencia-card">
+      <div class="evidencia-icon">🔌</div>
+      <div class="evidencia-text">Insertar Imagen: Esquemas Electrónicos</div>
     </div>
-    <div class="ts-card dark">
-      <div class="ts-title">// Funcionalidades clave</div>
-      <ul class="ts-list">
-        <li class="ts-item">Visibilidad nocturna: LEDs activan iluminación para revisar equipo y caminar con seguridad</li>
-        <li class="ts-item">Alerta de emergencia: Un botón envía coordenadas GPS por Telegram al contacto configurado</li>
-        <li class="ts-item">Sin dependencia del celular: todas las funciones accesibles desde el chaleco</li>
-        <li class="ts-item">Uso para actividades: senderismo, hiking, acampado, salidas a presas y ríos</li>
-      </ul>
+    <div class="evidencia-card">
+      <div class="evidencia-icon">📹</div>
+      <div class="evidencia-text">Insertar Video: Prototipo preliminar (Iteraciones)</div>
     </div>
   </div>
 </section>
 
-<!-- BACK -->
+<div class="divider"><span class="divider-label">05 — Metodología de Diseño y Ficha Técnica (30% + 15%)</span></div>
+
+<section id="tecnica">
+  <div class="section-eyebrow">// Arquitectura e Ingeniería</div>
+  <h2 class="section-heading reveal">Especificaciones<br>Técnicas</h2>
+  <div class="tech-specs-grid reveal reveal-delay-1">
+    <div class="ts-card dark">
+      <div class="ts-title">// Arquitectura Electrónica e Integración</div>
+      <ul class="ts-list">
+        <li class="ts-item">LEDs integrados directamente a la tela y ruteados internamente, sin montajes externos rígidos.</li>
+        <li class="ts-item">Microcontrolador y módulo GPS asíncrono que obtiene coordenadas aproximadas y las envía a un bot de Telegram.</li>
+        <li class="ts-item">Botón físico accesible sin sacar el celular, diseñado usando metodología de integración fluida Pahl & Beitz.</li>
+        <li class="ts-item"><strong>Consumo eléctrico:</strong> Reposo 50mA. Activo 400mA. Batería de 5000mAh para 12+ horas de autonomía.</li>
+      </ul>
+    </div>
+    <div class="ts-card">
+      <div class="ts-title">// Construcción Textil y Ergonomía</div>
+      <ul class="ts-list">
+        <li class="ts-item">Patronaje en talla L con modificaciones en sisa para permitir flexión extrema de brazos en hiking.</li>
+        <li class="ts-item">Sistema de forro doble: Popelina negra de soporte y mesh verde para escape térmico.</li>
+        <li class="ts-item"><strong>Peso Final:</strong> Aproximadamente 650 gramos. El peso del banco de baterías se distribuye para no fatigar cuello ni hombros.</li>
+        <li class="ts-item">Bolsillo ciego anti-humedad para aislar los componentes lógicos del sudor o factores ambientales ligeros.</li>
+      </ul>
+    </div>
+    <div class="ts-card">
+      <div class="ts-title">// Diseño de Funcionalidades Clave</div>
+      <ul class="ts-list">
+        <li class="ts-item">Visibilidad pasiva: LEDs activan campo de iluminación para revisar equipo y caminar de forma segura.</li>
+        <li class="ts-item">Alerta de emergencia silenciosa: Botón blindado anti-roces que ejecuta el script de transmisión de ubicación.</li>
+        <li class="ts-item">Sin dependencia visual: Toda interacción ocurre de manera táctil, liberando los sentidos del usuario hacia la naturaleza.</li>
+      </ul>
+    </div>
+    <div class="ts-card dark" style="display: flex; align-items: center; justify-content: center; text-align: center;">
+      <div style="font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.1em; color: var(--acid); line-height: 1.8;">
+        DISEÑADO PARA CONDICIONES OUTDOOR<br>
+        <span style="color: var(--paper); font-size: 11px; opacity: 0.6;">Senderismo · Hiking · Exploración</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="background:rgba(255,255,255,.05);"><span class="divider-label" style="background:var(--ink);color:var(--acid);">06 — Evaluación Final</span></div>
+
+<section id="resultados">
+  <div class="section-eyebrow">// Bitácora final y resultados</div>
+  <h2 class="section-heading reveal">Evidencia &<br>Conclusiones</h2>
+
+  <div class="evidencia-grid reveal reveal-delay-1" style="margin-top: 2rem;">
+    <div class="evidencia-card" style="border-color: rgba(200,255,0,0.3);">
+      <div class="evidencia-icon" style="color: var(--paper); opacity: 1;">📷</div>
+      <div class="evidencia-text" style="color: var(--paper);">Insertar Foto: Resultado Final (Frontal y Espalda)</div>
+    </div>
+    <div class="evidencia-card" style="border-color: rgba(200,255,0,0.3);">
+      <div class="evidencia-icon" style="color: var(--paper); opacity: 1;">📹</div>
+      <div class="evidencia-text" style="color: var(--paper);">Insertar Video: Uso del botón y recepción en Telegram</div>
+    </div>
+    <div class="evidencia-card" style="border-color: rgba(200,255,0,0.3);">
+      <div class="evidencia-icon" style="color: var(--paper); opacity: 1;">📷</div>
+      <div class="evidencia-text" style="color: var(--paper);">Insertar Foto: Detalle interior, costuras y electrónica oculta</div>
+    </div>
+    <div class="evidencia-card" style="border-color: rgba(200,255,0,0.3);">
+      <div class="evidencia-icon" style="color: var(--paper); opacity: 1;">📹</div>
+      <div class="evidencia-text" style="color: var(--paper);">Insertar Video: Demostración de visibilidad LED en exterior</div>
+    </div>
+  </div>
+
+  <div class="conclusion-block reveal reveal-delay-2">
+    <h3 class="conclusion-title">Reflexión Crítica</h3>
+    <p style="font-size: 14px; font-weight: 300; line-height: 1.8; color: rgba(242,239,232,0.8);">
+      El desarrollo de WEARAVEST nos enfrentó al choque constante entre la rigidez técnica de la electrónica y la fluidez requerida en el diseño de modas utilitario. Ocultar el cableado de la matriz LED y aislar el módulo GPS sin generar zonas de tensión o bultos incómodos fue nuestro mayor obstáculo. A través de múltiples iteraciones en los patrones del forro interno, logramos canales de enrutamiento que resolvieron la incomodidad. El resultado es un wearable exitoso: la tecnología desaparece visualmente pero permanece como una red de seguridad activa, permitiendo al usuario disfrutar de la naturaleza sin fricciones digitales.
+    </p>
+  </div>
+</section>
+
 <div class="back-section">
   <div>
     <div class="back-link-label">Siguiente proyecto</div>
