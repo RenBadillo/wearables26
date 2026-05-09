@@ -6,6 +6,9 @@
 <title>Pulsera Textil Interactiva — Wearables Lab</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+/* =========================================================
+   ROOT Y CSS ORIGINAL INTACTO
+   ========================================================= */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -28,7 +31,6 @@ body::before { content:'';position:fixed;inset:0;background-image:url("data:imag
 
 .cursor-dot { width:8px;height:8px;background:var(--blue);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%); }
 .cursor-ring { width:32px;height:32px;border:1px solid var(--blue);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;transition:width .25s,height .25s; }
-
 .progress-bar { position:fixed;top:0;left:0;height:2px;background:var(--blue);z-index:1000;width:0%;transition:width .05s; }
 
 nav { position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;mix-blend-mode:multiply; }
@@ -36,7 +38,6 @@ nav { position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:c
 .nav-back:hover { opacity:1; }
 .nav-title { font-family:var(--font-display);font-size:1rem;letter-spacing:.3em;text-transform:uppercase; }
 
-/* HERO */
 #hero {
   min-height: 100vh;
   background: var(--blue);
@@ -51,21 +52,8 @@ nav { position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:c
 }
 .hero-bg-text { position:absolute;bottom:-4rem;right:-2rem;font-family:var(--font-display);font-size:clamp(12rem,20vw,20rem);color:transparent;-webkit-text-stroke:1px rgba(242,239,232,.06);user-select:none;pointer-events:none;line-height:1;letter-spacing:-.02em; }
 
-/* LED animation */
-.hero-led-bar {
-  position: absolute;
-  top: 7rem;
-  right: 4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  align-items: flex-end;
-}
-.led-dot {
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  animation: led-blink 1.5s ease-in-out infinite;
-}
+.hero-led-bar { position: absolute; top: 7rem; right: 4rem; display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-end; }
+.led-dot { width: 12px; height: 12px; border-radius: 50%; animation: led-blink 1.5s ease-in-out infinite; }
 .led-dot:nth-child(1) { background: #ff4444; animation-delay: 0s; box-shadow: 0 0 12px #ff4444; }
 .led-dot:nth-child(2) { background: #ff8800; animation-delay: 0.3s; box-shadow: 0 0 12px #ff8800; }
 .led-dot:nth-child(3) { background: var(--acid); animation-delay: 0.6s; box-shadow: 0 0 12px var(--acid); }
@@ -79,126 +67,39 @@ h1.hero-title { font-family:var(--font-display);font-size:clamp(4rem,9vw,9rem);l
 .hero-data-label { font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(242,239,232,.35);margin-bottom:.4rem; }
 .hero-data-val { font-size:14px;font-weight:500;color:var(--paper); }
 
-/* SECTIONS */
 section { position:relative;z-index:1;padding:6rem 4rem; }
 .section-eyebrow { font-family:var(--font-mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--blue);margin-bottom:1rem; }
 .section-heading { font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4.5rem);line-height:.92;margin-bottom:3rem; }
 .divider { width:100%;height:1px;background:rgba(10,10,8,.1);position:relative;z-index:1; }
 .divider-label { position:absolute;top:50%;left:4rem;transform:translateY(-50%);background:var(--paper);padding:0 1rem;font-family:var(--font-mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--blue); }
 
-/* VERSIONS */
 #versiones { background: var(--paper); }
-.versions-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-.version-card {
-  padding: 3.5rem;
-  position: relative;
-  overflow: hidden;
-}
+.versions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.version-card { padding: 3.5rem; position: relative; overflow: hidden; }
 .version-card.v1 { background: var(--cream); }
 .version-card.v2 { background: var(--blue); color: var(--paper); }
-
-.v-num {
-  font-family: var(--font-display);
-  font-size: 7rem;
-  line-height: 0.85;
-  color: rgba(10,10,8,0.07);
-  position: absolute;
-  top: 1.5rem;
-  right: 2rem;
-}
+.v-num { font-family: var(--font-display); font-size: 7rem; line-height: 0.85; color: rgba(10,10,8,0.07); position: absolute; top: 1.5rem; right: 2rem; }
 .version-card.v2 .v-num { color: rgba(242,239,232,0.06); }
-
-.v-label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--blue);
-  margin-bottom: 1rem;
-}
+.v-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 1rem; }
 .version-card.v2 .v-label { color: var(--acid); }
-.v-title {
-  font-family: var(--font-display);
-  font-size: 2.5rem;
-  line-height: 0.92;
-  margin-bottom: 2rem;
-  color: var(--ink);
-}
+.v-title { font-family: var(--font-display); font-size: 2.5rem; line-height: 0.92; margin-bottom: 2rem; color: var(--ink); }
 .version-card.v2 .v-title { color: var(--paper); }
-
 .v-specs { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 2rem; }
-.v-spec {
-  display: flex;
-  gap: 1rem;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.5;
-  color: rgba(10,10,8,0.6);
-  align-items: flex-start;
-}
+.v-spec { display: flex; gap: 1rem; font-size: 13px; font-weight: 300; line-height: 1.5; color: rgba(10,10,8,0.6); align-items: flex-start; }
 .version-card.v2 .v-spec { color: rgba(242,239,232,0.55); }
 .v-spec-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
-
-.v-materials {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  line-height: 1.8;
-  color: rgba(10,10,8,0.35);
-  text-transform: uppercase;
-}
+.v-materials { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; line-height: 1.8; color: rgba(10,10,8,0.35); text-transform: uppercase; }
 .version-card.v2 .v-materials { color: rgba(242,239,232,0.25); }
 
-/* LED SEQUENCE */
 #secuencia { background: var(--ink); color: var(--paper); }
 #secuencia .section-eyebrow { color: var(--acid); }
 #secuencia .section-heading { color: var(--paper); }
-
-.sequence-intro {
-  max-width: 560px;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.9;
-  color: rgba(242,239,232,0.5);
-  margin-bottom: 4rem;
-  font-style: italic;
-}
-
-.led-sequence-viz {
-  display: flex;
-  gap: 3rem;
-  align-items: flex-end;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-}
-.led-step-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-.led-step-label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(242,239,232,0.3);
-  text-align: center;
-}
-.led-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.led-sim {
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  transition: opacity 0.3s;
-}
+.sequence-intro { max-width: 560px; font-size: 14px; font-weight: 300; line-height: 1.9; color: rgba(242,239,232,0.5); margin-bottom: 4rem; font-style: italic; }
+.led-sequence-viz { display: flex; gap: 3rem; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; }
+.led-step-group { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.led-step-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(242,239,232,0.3); text-align: center; }
+.led-row { display: flex; gap: 8px; align-items: center; }
+.led-sim { width: 18px; height: 18px; border-radius: 50%; transition: opacity 0.3s; }
 .led-sim.on { box-shadow: 0 0 14px currentColor; }
 .led-sim.off { opacity: 0.12; }
 .led-sim.r { background: #ff4444; color: #ff4444; }
@@ -206,43 +107,16 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
 .led-sim.y { background: var(--acid); color: var(--acid); }
 .led-sim.b { background: #44aaff; color: #44aaff; }
 .led-sim.p { background: #cc44ff; color: #cc44ff; }
-
-.arrow-step {
-  font-size: 1.2rem;
-  color: rgba(242,239,232,0.2);
-  align-self: center;
-  padding-bottom: 1.5rem;
-}
-
-.circuit-notes {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2px;
-  margin-top: 2rem;
-}
-.cn-cell {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
-  padding: 2rem;
-}
+.arrow-step { font-size: 1.2rem; color: rgba(242,239,232,0.2); align-self: center; padding-bottom: 1.5rem; }
+.circuit-notes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-top: 2rem; }
+.cn-cell { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; }
 .cn-num { font-family:var(--font-display);font-size:3rem;color:rgba(200,255,0,0.2);line-height:1;margin-bottom:1rem; }
 .cn-title { font-size:14px;font-weight:500;margin-bottom:.5rem;color:var(--paper); }
 .cn-body { font-size:12px;font-weight:300;line-height:1.7;color:rgba(242,239,232,.4); }
 
-/* PROCESS */
 #proceso-pulsera { background: var(--cream); }
-.process-layout {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
-  margin-bottom: 3rem;
-}
-.proc-step {
-  background: var(--paper);
-  padding: 2.5rem 2rem;
-  border: 1px solid rgba(10,10,8,0.05);
-  transition: background 0.3s, border-color 0.3s;
-}
+.process-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 3rem; }
+.proc-step { background: var(--paper); padding: 2.5rem 2rem; border: 1px solid rgba(10,10,8,0.05); transition: background 0.3s, border-color 0.3s; }
 .proc-step:hover { background: var(--ink); color: var(--paper); }
 .proc-num { font-family:var(--font-display);font-size:4rem;color:rgba(10,10,8,.07);line-height:1;margin-bottom:1rem;transition:color .3s; }
 .proc-step:hover .proc-num { color:rgba(200,255,0,.2); }
@@ -250,16 +124,8 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
 .proc-body { font-size:12px;font-weight:300;line-height:1.7;color:rgba(10,10,8,.5); }
 .proc-step:hover .proc-body { color:rgba(242,239,232,.5); }
 
-.materials-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-.mat-block {
-  background: var(--ink);
-  color: var(--paper);
-  padding: 2.5rem;
-}
+.materials-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.mat-block { background: var(--ink); color: var(--paper); padding: 2.5rem; }
 .mat-block.light { background: var(--paper); color: var(--ink); border: 1px solid rgba(10,10,8,.06); }
 .mat-block-label { font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--acid);margin-bottom:1.5rem; }
 .mat-block.light .mat-block-label { color:var(--blue); }
@@ -269,36 +135,22 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
 .ml-item::before { content:'·';color:var(--acid);font-size:1.2rem;line-height:0;flex-shrink:0; }
 .mat-block.light .ml-item::before { color:var(--blue); }
 
-/* COMPARISON */
 #comparacion { background: var(--paper); }
-.comp-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-.comp-table th {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 1rem 1.5rem;
-  text-align: left;
-  border-bottom: 2px solid var(--ink);
-  color: rgba(10,10,8,0.5);
-}
+.comp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.comp-table th { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 1rem 1.5rem; text-align: left; border-bottom: 2px solid var(--ink); color: rgba(10,10,8,0.5); }
 .comp-table th:first-child { color: var(--ink); }
-.comp-table td {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(10,10,8,0.07);
-  font-weight: 300;
-  color: rgba(10,10,8,0.65);
-}
+.comp-table td { padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(10,10,8,0.07); font-weight: 300; color: rgba(10,10,8,0.65); }
 .comp-table td:first-child { font-weight: 500; color: var(--ink); }
 .comp-table tr:hover td { background: rgba(10,10,8,0.02); }
 .check { color: #3a8a5a; font-weight: 500; }
 .cross { color: rgba(10,10,8,0.25); }
 
-/* BACK */
+/* ESTILOS AÑADIDOS PARA EVIDENCIA FINAL (COHERENTES CON TU CSS ORIGINAL) */
+.evidencia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 4rem; }
+.evidencia-card { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); padding: 4rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.evidencia-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5; color: var(--paper); }
+.evidencia-text { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--acid); }
+
 .back-section { background:var(--ink);padding:4rem;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1; }
 .back-link { font-family:var(--font-display);font-size:2rem;color:var(--paper);text-decoration:none;letter-spacing:.1em;transition:color .3s;display:flex;align-items:center;gap:1rem; }
 .back-link:hover { color:var(--acid); }
@@ -310,10 +162,7 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
 .reveal-delay-2 { transition-delay:.2s; }
 
 @keyframes slide-up { from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none} }
-@keyframes led-blink {
-  0%,100% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.1); }
-}
+@keyframes led-blink { 0%,100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } }
 </style>
 </head>
 <body>
@@ -324,7 +173,7 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
 
 <nav>
   <a href="index.html" class="nav-back">← Bitácora</a>
-  <div class="nav-title">Proyecto 02</div>
+  <div class="nav-title">Prácticas E-Textile</div>
 </nav>
 
 <section id="hero">
@@ -337,58 +186,81 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
     <div class="led-dot"></div>
     <div class="led-label">5 LEDs · En bucle</div>
   </div>
-  <div class="hero-eyebrow">// Proyecto 02 — E-textile</div>
+  <div class="hero-eyebrow">// Prácticas 1 y 2 — E-textile</div>
   <h1 class="hero-title">Pulsera<br>Textil<br>Interactiva</h1>
   <div class="hero-bottom-row">
     <div>
-      <div class="hero-data-label">Versiones</div>
+      <div class="hero-data-label">Versiones Documentadas</div>
       <div class="hero-data-val">2 — Conductor + Micro</div>
     </div>
     <div>
-      <div class="hero-data-label">LEDs integrados</div>
-      <div class="hero-data-val">5 de colores distintos</div>
+      <div class="hero-data-label">Componentes Base</div>
+      <div class="hero-data-val">5 LEDs de colores distintos</div>
     </div>
     <div>
-      <div class="hero-data-label">Activación</div>
-      <div class="hero-data-val">Al cerrar la pulsera</div>
+      <div class="hero-data-label">Activación de Loop</div>
+      <div class="hero-data-val">Únicamente al cerrar (Switch)</div>
     </div>
   </div>
 </section>
 
-<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--blue);color:var(--acid);">01 — Dos versiones</span></div>
+<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--blue);color:var(--acid);">01 — Fundamentos del Diseño</span></div>
+
+<section id="concepto" style="background: var(--paper);">
+  <div class="section-eyebrow">// Concepto y Metodología (10% y 30%)</div>
+  <h2 class="section-heading reveal">Intención &<br>Arquitectura</h2>
+  
+  <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem;" class="reveal reveal-delay-1">
+    <div>
+      <p style="font-size: 15px; font-weight: 300; line-height: 1.95; color: rgba(10,10,8,0.65); font-style: italic; margin-bottom: 1.5rem;">
+        La intención de diseño principal para este wearable es difuminar la línea entre la prenda y el circuito. No queremos componentes rígidos ni interruptores artificiales. La estética es libre, pero su intención de diseño es sumamente clara: <strong>el cuerpo humano debe funcionar como el activador</strong>.
+      </p>
+      <p style="font-size: 14px; font-weight: 300; line-height: 1.8; color: rgba(10,10,8,0.65);">
+        Para lograrlo, aplicamos las metodologías de <strong>Design Thinking</strong> (asegurando el confort y descartando componentes externos) y <strong>Pahl & Beitz</strong> (estructurando la arquitectura modular). El resultado es una pulsera flexible que enciende su secuencia de LEDs <strong>únicamente</strong> cuando se ajusta a la muñeca.
+      </p>
+    </div>
+    <div class="cn-cell" style="background: var(--cream); border: none; padding: 2.5rem; border-left: 2px solid var(--blue);">
+      <h3 style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 1.5rem;">// Integración Diseño e Ingeniería</h3>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+        <li style="font-size: 13px; font-weight: 300; line-height: 1.6; color: rgba(10,10,8,0.7);">▸ El textil actúa como la PCB (Placa) gracias al hilo de acero.</li>
+        <li style="font-size: 13px; font-weight: 300; line-height: 1.6; color: rgba(10,10,8,0.7);">▸ El broche de metal o ajuste actúa como un interruptor mecánico.</li>
+        <li style="font-size: 13px; font-weight: 300; line-height: 1.6; color: rgba(10,10,8,0.7);">▸ El microcontrolador está programado para disparar una experiencia lumínica al cerrarse el circuito.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">02 — Dos versiones</span></div>
 
 <section id="versiones">
   <div class="section-eyebrow">// Evolución del prototipo</div>
   <h2 class="section-heading reveal">V1 & V2</h2>
   <div class="versions-grid reveal reveal-delay-1">
-    <!-- V1 -->
     <div class="version-card v1">
       <div class="v-num">1</div>
-      <div class="v-label">// Primera versión</div>
+      <div class="v-label">// Práctica 1</div>
       <h3 class="v-title">Hilo<br>Conductor</h3>
       <ul class="v-specs">
-        <li class="v-spec"><span class="v-spec-icon">🧵</span><span>Hilo conductivo de acero inoxidable cosido directamente al textil como pista eléctrica</span></li>
-        <li class="v-spec"><span class="v-spec-icon">💡</span><span>5 LEDs de colores diferentes con resistencias calibradas para intensidad uniforme</span></li>
-        <li class="v-spec"><span class="v-spec-icon">🔘</span><span>Encendido al cerrar la pulsera — actúa como interruptor mecánico</span></li>
-        <li class="v-spec"><span class="v-spec-icon">🚫</span><span>Sin microcontrolador — circuito simple directo con batería</span></li>
-        <li class="v-spec"><span class="v-spec-icon">✏️</span><span>Costura invisible para acabado limpio y profesional</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🧵</span><span>Uso obligatorio de hilo conductivo de acero inoxidable cosido directamente al textil como pista eléctrica.</span></li>
+        <li class="v-spec"><span class="v-spec-icon">💡</span><span>Integración de 5 LEDs de colores diferentes con resistencias calibradas para intensidad uniforme.</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🔘</span><span>El encendido debe ocurrir <strong>únicamente</strong> al cerrar la pulsera (interruptor mecánico integrado).</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🚫</span><span>El circuito completo está en el textil. Se evitan bordes rígidos y garantiza colocación fácil en el cuerpo.</span></li>
+        <li class="v-spec"><span class="v-spec-icon">✏️</span><span>Costura invisible para acabado limpio y profesional.</span></li>
       </ul>
       <div class="v-materials">
         Tela suave · Esponja interior · Hilo conductor ·<br>
         5 LEDs · Resistencias · Batería
       </div>
     </div>
-    <!-- V2 -->
     <div class="version-card v2">
       <div class="v-num">2</div>
-      <div class="v-label">// Segunda versión</div>
+      <div class="v-label">// Práctica 2</div>
       <h3 class="v-title">Micro-<br>controlador</h3>
       <ul class="v-specs">
-        <li class="v-spec"><span class="v-spec-icon">🧠</span><span>Microcontrolador programable para secuencias de encendido/apagado en bucle</span></li>
-        <li class="v-spec"><span class="v-spec-icon">💡</span><span>5 LEDs con secuencia programada que comunica una experiencia o emoción</span></li>
-        <li class="v-spec"><span class="v-spec-icon">🔘</span><span>Loop inicia al cerrar la pulsera y continúa de forma autónoma</span></li>
-        <li class="v-spec"><span class="v-spec-icon">📦</span><span>Para el prototipo, el microcontrolador puede ubicarse fuera de la pulsera</span></li>
-        <li class="v-spec"><span class="v-spec-icon">🎨</span><span>Secuencia LED con intención comunicativa — diseño de experiencia</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🧠</span><span>Microcontrolador externo programado para secuencias de encendido/apagado temporal en bucle.</span></li>
+        <li class="v-spec"><span class="v-spec-icon">💡</span><span>Los 5 LEDs comunican una experiencia interactiva intencionada mediante luz.</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🔘</span><span>La secuencia inicia <strong>únicamente</strong> al abrochar la pulsera y continúa en loop.</span></li>
+        <li class="v-spec"><span class="v-spec-icon">🧘</span><span>Mantenimiento estricto de los requisitos de diseño: ajuste, flexibilidad y confort sin molestias.</span></li>
       </ul>
       <div class="v-materials">
         Tela azul mesh · LEDs NeoPixel ·<br>
@@ -398,80 +270,44 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
   </div>
 </section>
 
-<div class="divider"><span class="divider-label">02 — Secuencia LED</span></div>
+<div class="divider"><span class="divider-label">03 — Secuencia LED</span></div>
 
 <section id="secuencia">
-  <div class="section-eyebrow">// Diseño de interacción</div>
+  <div class="section-eyebrow">// Diseño de interacción (V2)</div>
   <h2 class="section-heading reveal">Secuencia &<br>Circuito</h2>
   <p class="sequence-intro reveal reveal-delay-1">
     La pulsera debe comunicar o provocar una experiencia mediante una secuencia programada de encendido y apagado.
-    La secuencia inicia al cerrar la pulsera y continúa en loop — el cuerpo como activador.
+    La secuencia inicia al cerrar la pulsera y continúa en loop de forma autónoma.
   </p>
 
   <div class="led-sequence-viz reveal reveal-delay-2">
     <div class="led-step-group">
-      <div class="led-row">
-        <div class="led-sim r off"></div>
-        <div class="led-sim o off"></div>
-        <div class="led-sim y off"></div>
-        <div class="led-sim b off"></div>
-        <div class="led-sim p off"></div>
-      </div>
+      <div class="led-row"><div class="led-sim r off"></div><div class="led-sim o off"></div><div class="led-sim y off"></div><div class="led-sim b off"></div><div class="led-sim p off"></div></div>
       <div class="led-step-label">Reposo</div>
     </div>
     <div class="arrow-step">→</div>
     <div class="led-step-group">
-      <div class="led-row">
-        <div class="led-sim r on"></div>
-        <div class="led-sim o off"></div>
-        <div class="led-sim y off"></div>
-        <div class="led-sim b off"></div>
-        <div class="led-sim p off"></div>
-      </div>
+      <div class="led-row"><div class="led-sim r on"></div><div class="led-sim o off"></div><div class="led-sim y off"></div><div class="led-sim b off"></div><div class="led-sim p off"></div></div>
       <div class="led-step-label">LED 1</div>
     </div>
     <div class="arrow-step">→</div>
     <div class="led-step-group">
-      <div class="led-row">
-        <div class="led-sim r on"></div>
-        <div class="led-sim o on"></div>
-        <div class="led-sim y off"></div>
-        <div class="led-sim b off"></div>
-        <div class="led-sim p off"></div>
-      </div>
+      <div class="led-row"><div class="led-sim r on"></div><div class="led-sim o on"></div><div class="led-sim y off"></div><div class="led-sim b off"></div><div class="led-sim p off"></div></div>
       <div class="led-step-label">LED 1-2</div>
     </div>
     <div class="arrow-step">→</div>
     <div class="led-step-group">
-      <div class="led-row">
-        <div class="led-sim r on"></div>
-        <div class="led-sim o on"></div>
-        <div class="led-sim y on"></div>
-        <div class="led-sim b on"></div>
-        <div class="led-sim p on"></div>
-      </div>
+      <div class="led-row"><div class="led-sim r on"></div><div class="led-sim o on"></div><div class="led-sim y on"></div><div class="led-sim b on"></div><div class="led-sim p on"></div></div>
       <div class="led-step-label">Todos</div>
     </div>
     <div class="arrow-step">→</div>
     <div class="led-step-group">
-      <div class="led-row">
-        <div class="led-sim r off"></div>
-        <div class="led-sim o off"></div>
-        <div class="led-sim y on"></div>
-        <div class="led-sim b off"></div>
-        <div class="led-sim p off"></div>
-      </div>
+      <div class="led-row"><div class="led-sim r off"></div><div class="led-sim o off"></div><div class="led-sim y on"></div><div class="led-sim b off"></div><div class="led-sim p off"></div></div>
       <div class="led-step-label">Flash</div>
     </div>
     <div class="arrow-step">↺</div>
     <div class="led-step-group">
-      <div class="led-row">
-        <div class="led-sim r off" style="opacity:.25;box-shadow:none;"></div>
-        <div class="led-sim o off" style="opacity:.25;box-shadow:none;"></div>
-        <div class="led-sim y off" style="opacity:.25;box-shadow:none;"></div>
-        <div class="led-sim b off" style="opacity:.25;box-shadow:none;"></div>
-        <div class="led-sim p off" style="opacity:.25;box-shadow:none;"></div>
-      </div>
+      <div class="led-row"><div class="led-sim r off" style="opacity:.25;box-shadow:none;"></div><div class="led-sim o off" style="opacity:.25;box-shadow:none;"></div><div class="led-sim y off" style="opacity:.25;box-shadow:none;"></div><div class="led-sim b off" style="opacity:.25;box-shadow:none;"></div><div class="led-sim p off" style="opacity:.25;box-shadow:none;"></div></div>
       <div class="led-step-label">Loop</div>
     </div>
   </div>
@@ -485,73 +321,80 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
     <div class="cn-cell">
       <div class="cn-num">02</div>
       <div class="cn-title">Resistencias para uniformidad</div>
-      <div class="cn-body">Se añadieron resistencias calibradas en cada LED para garantizar que todos enciendan con la misma intensidad. Sin ellas, los LEDs más cercanos a la batería brillarían más.</div>
+      <div class="cn-body">Se añadieron resistencias calibradas en cada LED para garantizar que todos enciendan con la misma intensidad. Sin ellas, los LEDs más cercanos brillarían más.</div>
     </div>
     <div class="cn-cell">
       <div class="cn-num">03</div>
       <div class="cn-title">Interruptor por cierre</div>
-      <div class="cn-body">El circuito se completa cuando la pulsera se cierra alrededor de la muñeca. El cierre actúa como switch — al ponérsela, se activa. Al quitársela, se apaga.</div>
+      <div class="cn-body">El circuito se completa cuando la pulsera se cierra. El cierre actúa como switch — al ponérsela, se activa el loop. Al quitársela, se apaga.</div>
     </div>
   </div>
 </section>
 
-<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--ink);color:var(--acid);">03 — Proceso de fabricación</span></div>
+<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--ink);color:var(--acid);">04 — Proceso de fabricación</span></div>
 
 <section id="proceso-pulsera">
-  <div class="section-eyebrow">// De la tela al prototipo</div>
-  <h2 class="section-heading reveal">Fabricación</h2>
+  <div class="section-eyebrow">// Proceso de manufactura (30%)</div>
+  <h2 class="section-heading reveal">Fabricación<br>e Iteraciones</h2>
 
   <div class="process-layout reveal reveal-delay-1">
     <div class="proc-step">
       <div class="proc-num">01</div>
-      <div class="proc-name">Diseño del patrón</div>
-      <div class="proc-body">Se diseñó la forma de la pulsera para que se ajuste cómodamente a la muñeca. Materiales principales: tela suave en el exterior y esponja en el interior para confort.</div>
+      <div class="proc-name">Diseño e iteración (Patrón)</div>
+      <div class="proc-body">Se iteró la forma y estructura usando prototipos de papel hasta lograr un ajuste sin fricción. Se integró una esponja interior para garantizar comodidad total en la muñeca.</div>
     </div>
     <div class="proc-step">
       <div class="proc-num">02</div>
       <div class="proc-name">Corte y ensamble</div>
-      <div class="proc-body">Se cortaron las piezas de tela (azul mesh y estructura). Se unieron las capas y se dejó espacio para integrar los componentes electrónicos.</div>
+      <div class="proc-body">Se cortaron las piezas definitivas (azul mesh en V2). Se unieron las capas textiles dejando un núcleo accesible para la futura integración de componentes y cableado externo.</div>
     </div>
     <div class="proc-step">
       <div class="proc-num">03</div>
-      <div class="proc-name">Costura del circuito</div>
-      <div class="proc-body">El hilo conductivo se cosió creando las pistas positiva y negativa del circuito. Se bordaron los puntos de contacto de cada LED con cuidado de no crear cortocircuitos.</div>
+      <div class="proc-name">Costura del circuito (E-Textile)</div>
+      <div class="proc-body">El hilo conductivo se cosió a mano simulando una placa PCB. Se priorizó un acabado de costura invisible, aislando los polos positivo y negativo para evitar cortocircuitos.</div>
     </div>
     <div class="proc-step">
       <div class="proc-num">04</div>
-      <div class="proc-name">Prueba y calibración</div>
-      <div class="proc-body">Se probó el circuito con fuente de laboratorio antes de conectar batería. Se ajustaron resistencias hasta lograr brillo uniforme en todos los LEDs. Prueba de cierre como interruptor.</div>
+      <div class="proc-name">Prueba, Código y Calibración</div>
+      <div class="proc-body">Para V1: Prueba de resistencias en protoboard. Para V2: Programación de Arduino/MCU para lograr el loop de LEDs exacto al abrochar la pieza. Validación de funcionalidad.</div>
     </div>
   </div>
 
   <div class="materials-row reveal reveal-delay-2">
-    <div class="mat-block">
-      <div class="mat-block-label">// Versión 1 — Materiales</div>
-      <ul class="mat-list">
-        <li class="ml-item">Tela suave (exterior)</li>
-        <li class="ml-item">Esponja (interior para confort)</li>
-        <li class="ml-item">Hilo conductivo de acero inoxidable</li>
-        <li class="ml-item">5 LEDs de colores distintos</li>
-        <li class="ml-item">Resistencias calibradas</li>
-        <li class="ml-item">Batería tipo botón</li>
-        <li class="ml-item">Aguja de ojo mediano</li>
-      </ul>
+    <div class="mat-block" style="background: var(--ink);">
+      <div class="mat-block-label" style="color: var(--acid);">// Práctica 3 — Reporte de Bordado</div>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <h4 style="font-size: 15px; margin-bottom: 0.5rem; color: var(--paper); font-weight: 500;">Técnica 1: Hilván</h4>
+        <p style="font-size: 12px; font-weight: 300; line-height: 1.6; color: rgba(242,239,232,0.6);">
+          <strong>Descripción:</strong> Puntada básica y recta utilizada frecuentemente para unir telas de forma temporal o para delinear trazos rápidos en prototipos textiles. Crea una línea punteada visible.<br>
+          <strong>Material empleado:</strong> Hilo de algodón mercerizado estándar y aguja de ojo mediano sobre tela de popelina.
+        </p>
+      </div>
+
+      <div>
+        <h4 style="font-size: 15px; margin-bottom: 0.5rem; color: var(--paper); font-weight: 500;">Técnica 2: Nudo Francés</h4>
+        <p style="font-size: 12px; font-weight: 300; line-height: 1.6; color: rgba(242,239,232,0.6);">
+          <strong>Descripción:</strong> Puntada decorativa de alto relieve. Se forma envolviendo el hilo sobre la aguja antes de anclarla al textil, generando un nudo volumétrico perfecto para añadir textura focal al diseño.<br>
+          <strong>Material empleado:</strong> Hilo grueso tipo perlé envuelto dos veces, anclado sobre una base textil tipo mesh.
+        </p>
+      </div>
     </div>
-    <div class="mat-block light">
-      <div class="mat-block-label">// Versión 2 — Materiales adicionales</div>
-      <ul class="mat-list">
-        <li class="ml-item">Todo lo de V1 +</li>
-        <li class="ml-item">Microcontrolador (Arduino/similar)</li>
-        <li class="ml-item">LEDs NeoPixel (RGB programables)</li>
-        <li class="ml-item">Código de secuencia (C++/Arduino)</li>
-        <li class="ml-item">Cables jumper para prototipo</li>
-        <li class="ml-item">Tela azul mesh (segunda versión)</li>
-      </ul>
+
+    <div class="mat-block light" style="background: var(--paper);">
+      <div class="mat-block-label" style="color: var(--blue);">// Práctica 3 — Reporte de Estampado</div>
+      <div>
+        <h4 style="font-size: 15px; margin-bottom: 0.5rem; color: var(--ink); font-weight: 500;">Serigrafía Textil y Tintas</h4>
+        <p style="font-size: 12px; font-weight: 300; line-height: 1.6; color: rgba(10,10,8,0.65);">
+          <strong>Descripción:</strong> Técnica de estampado basada en la transferencia de tinta a través de una malla tensada. Se utiliza una emulsión fotosensible para bloquear las áreas negativas, creando una plantilla. En Wearables, esta técnica permite imprimir pistas eléctricas utilizando tintas de plata o carbono, creando circuitos extremadamente finos y maleables sobre la ropa.<br><br>
+          <strong>Material empleado:</strong> Marco con malla de 43 hilos (estándar para textil), racleta de goma poliuretano, tinta conductiva o textil base agua, y tela base de algodón 100%.
+        </p>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="divider"><span class="divider-label">04 — Comparativa</span></div>
+<div class="divider"><span class="divider-label">05 — Comparativa</span></div>
 
 <section id="comparacion">
   <div class="section-eyebrow">// V1 vs V2</div>
@@ -574,57 +417,76 @@ section { position:relative;z-index:1;padding:6rem 4rem; }
         <tr>
           <td>Control de LEDs</td>
           <td>Todos encienden a la vez</td>
-          <td>Secuencia programada en loop</td>
+          <td>Secuencia temporal programada en loop</td>
         </tr>
         <tr>
           <td>Resistencias</td>
-          <td><span class="check">✓ Sí, calibradas</span></td>
-          <td><span class="check">✓ Controladas por código</span></td>
+          <td><span class="check">✓ Sí, físicas calibradas</span></td>
+          <td><span class="check">✓ Controladas por código (NeoPixel)</span></td>
         </tr>
         <tr>
           <td>Hilo conductivo</td>
-          <td><span class="check">✓ Obligatorio</span></td>
-          <td><span class="check">✓ Para conexiones al textil</span></td>
+          <td><span class="check">✓ Obligatorio para conexión</span></td>
+          <td><span class="check">✓ Obligatorio en matriz textil</span></td>
         </tr>
         <tr>
           <td>Microcontrolador</td>
           <td><span class="cross">— No</span></td>
-          <td><span class="check">✓ Sí (externo en prototipo)</span></td>
-        </tr>
-        <tr>
-          <td>Experiencia interactiva</td>
-          <td>Encendido simple</td>
-          <td>Secuencia con intención comunicativa</td>
-        </tr>
-        <tr>
-          <td>Complejidad construcción</td>
-          <td>Baja — ideal para introducción</td>
-          <td>Media — requiere programación</td>
+          <td><span class="check">✓ Sí (Ubicado externo al textil)</span></td>
         </tr>
         <tr>
           <td>Costura invisible</td>
-          <td><span class="check">✓</span></td>
-          <td><span class="check">✓</span></td>
-        </tr>
-        <tr>
-          <td>Comodidad en muñeca</td>
-          <td><span class="check">✓ Sin bordes rígidos</span></td>
-          <td><span class="check">✓ Sin bordes rígidos</span></td>
+          <td><span class="check">✓ Sí</span></td>
+          <td><span class="check">✓ Sí</span></td>
         </tr>
         <tr>
           <td>Activación</td>
-          <td>Al cerrar (interruptor mecánico)</td>
-          <td>Al cerrar → inicia loop automático</td>
+          <td>Al cerrar (switch mecánico)</td>
+          <td>Al cerrar → dispara rutina automática</td>
         </tr>
       </tbody>
     </table>
   </div>
 </section>
 
+<div class="divider" style="background:rgba(255,255,255,.06);"><span class="divider-label" style="background:var(--slate);color:var(--acid);">06 — Evaluación Final</span></div>
+
+<section id="evidencia" style="background: var(--ink); color: var(--paper);">
+  <div class="section-eyebrow" style="color: var(--acid);">// Documentación visual final</div>
+  <h2 class="section-heading reveal">Evidencia &<br>Conclusiones</h2>
+  
+  <div class="evidencia-grid reveal reveal-delay-1">
+    <div class="evidencia-card">
+      <div class="evidencia-icon" style="color: var(--paper);">📷</div>
+      <div class="evidencia-text" style="color: var(--paper);">Insertar Foto:<br>Evidencia de comodidad, flexibilidad y ajuste en la muñeca (Sin bordes rígidos)</div>
+    </div>
+    <div class="evidencia-card">
+      <div class="evidencia-icon" style="color: var(--paper);">📹</div>
+      <div class="evidencia-text" style="color: var(--paper);">Insertar Video:<br>Demostración de los 5 LEDs encendiendo exactamente al abrochar la pulsera</div>
+    </div>
+    <div class="evidencia-card">
+      <div class="evidencia-icon" style="color: var(--paper);">📷</div>
+      <div class="evidencia-text" style="color: var(--paper);">Insertar Foto:<br>Evidencia del Bordado y Estampado (Práctica 3) y detalle de hilo conductor</div>
+    </div>
+    <div class="evidencia-card">
+      <div class="evidencia-icon" style="color: var(--paper);">📹</div>
+      <div class="evidencia-text" style="color: var(--paper);">Insertar Video:<br>Práctica 2: Demostración de secuencia visual en loop con Microcontrolador</div>
+    </div>
+  </div>
+
+  <div class="cn-cell reveal reveal-delay-2" style="border-left: 2px solid var(--acid); margin-top: 3rem; background: rgba(255,255,255,0.03);">
+    <h3 class="cn-title" style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 1rem;">Reflexión Crítica del Proceso</h3>
+    <p class="cn-body" style="font-size: 14px; font-weight: 300; line-height: 1.8; color: rgba(242,239,232,0.8);">
+      El proceso de construir una pulsera interactiva e-textile supuso un cambio drástico de paradigma: la tela dejó de ser un simple soporte para convertirse en el hardware mismo. Trabajar con hilo de acero inoxidable nos enseñó que la tensión de la costura y el aislamiento de las pistas son críticos para evitar cortocircuitos al flexionar la prenda.<br><br>
+      A nivel funcional, lograr que la pulsera actúe como su propio interruptor validó el concepto fundamental de la materia: la tecnología vestible debe ser intuitiva. La iteración desde un circuito directo (V1) hasta uno lógico (V2) demostró que se puede generar una experiencia comunicativa (una secuencia LED) sin comprometer la comodidad y la ergonomía del usuario.
+    </p>
+  </div>
+</section>
+
 <div class="back-section">
   <div>
-    <div class="back-link-label">Proyecto anterior</div>
-    <a href="proyecto-chaleco.html" class="back-link">← Chaleco Outdoor</a>
+    <div class="back-link-label">Siguiente entregable</div>
+    <a href="proyecto-chaleco.html" class="back-link">Chaleco Outdoor →</a>
   </div>
   <div style="text-align:right;">
     <div class="back-link-label">Volver a</div>
