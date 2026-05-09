@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dossier Técnico — Wearables Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   ROOT Y CSS ORIGINAL INTACTO
+   ========================================================= */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink:      #0a0a08;
+  --paper:    #f2efe8;
+  --cream:    #e8e4d9;
+  --acid:     #c8ff00;
+  --rust:     #d45a2a;
+  --slate:    #2a3240;
+  --olive:    #3d4a2d;
+  --blue:     #1a3a5c;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); overflow-x: hidden; cursor: none; }
+body::before { content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4; }
+
+.cursor-dot { width:8px;height:8px;background:var(--slate);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%); }
+.cursor-ring { width:32px;height:32px;border:1px solid var(--slate);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.5;transition:width .25s,height .25s; }
+.progress-bar { position:fixed;top:0;left:0;height:2px;background:var(--acid);z-index:1000;width:0%;transition:width .05s; }
+
+nav { position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;mix-blend-mode:multiply; }
+.nav-back { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);text-decoration:none;opacity:.5;transition:opacity .3s;display:flex;align-items:center;gap:.5rem; }
+.nav-back:hover { opacity:1; }
+.nav-title { font-family:var(--font-display);font-size:1rem;letter-spacing:.3em;text-transform:uppercase; }
+
+/* HERO - TECHNICAL DOSSIER */
+#hero { min-height: 100vh; background: var(--slate); color: var(--paper); display: flex; flex-direction: column; justify-content: flex-end; padding: 0 4rem 4rem; position: relative; overflow: hidden; z-index: 1; }
+.hero-bg-text { position:absolute;bottom:-4rem;right:-2rem;font-family:var(--font-display);font-size:clamp(10rem,18vw,18rem);color:transparent;-webkit-text-stroke:1px rgba(242,239,232,.04);user-select:none;pointer-events:none;line-height:1;letter-spacing:-.02em; }
+.hero-tag { position: absolute; top: 7rem; right: 4rem; text-align: right; }
+.hero-tag span { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acid); opacity: 0.7; line-height: 2.2; }
+.hero-eyebrow { font-family:var(--font-mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--acid);margin-bottom:1.5rem; opacity:0;animation:slide-up .8s .2s ease forwards; }
+h1.hero-title { font-family:var(--font-display);font-size:clamp(4rem,9vw,9rem);line-height:.88;letter-spacing:-.01em;margin-bottom:3rem;opacity:0;animation:slide-up .8s .4s ease forwards;color:var(--paper); }
+
+/* SECTIONS */
+section { position:relative;z-index:1;padding:6rem 4rem; }
+.section-eyebrow { font-family:var(--font-mono);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--slate);margin-bottom:1rem; }
+.section-heading { font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4.5rem);line-height:.92;margin-bottom:3rem; }
+.divider { width:100%;height:1px;background:rgba(10,10,8,.1);position:relative;z-index:1; }
+.divider-label { position:absolute;top:50%;left:4rem;transform:translateY(-50%);background:var(--paper);padding:0 1rem;font-family:var(--font-mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--slate); }
+
+/* =========================================================
+   DISEÑO DOSSIER UX E INVESTIGACIÓN
+   ========================================================= */
+#investigacion { background: var(--paper); }
+.research-grid { display: grid; grid-template-columns: 350px 1fr; gap: 4rem; align-items: start; }
+.user-persona { background: var(--cream); border: 1px solid rgba(10,10,8,0.08); padding: 3rem; position: sticky; top: 6rem; }
+.up-header { display: flex; gap: 1.5rem; align-items: center; margin-bottom: 2rem; }
+.up-avatar { width: 70px; height: 70px; border-radius: 50%; background: var(--slate); color: var(--acid); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; }
+.up-name { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; margin-bottom: 0.2rem; }
+.up-demo { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--rust); }
+.up-stats { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; border-top: 1px solid rgba(10,10,8,0.1); padding-top: 2rem; }
+.up-stat-item { font-size: 12px; font-weight: 300; }
+.up-stat-item strong { display: block; font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate); margin-bottom: 0.2rem; }
+
+.empathy-map { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 3rem; }
+.em-box { background: var(--ink); color: var(--paper); padding: 2rem; border-left: 2px solid; }
+.em-box.pains { border-color: var(--rust); }
+.em-box.gains { border-color: var(--acid); }
+.em-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; opacity: 0.7; }
+.em-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.em-list li { font-size: 13px; font-weight: 300; line-height: 1.6; position: relative; padding-left: 1rem; }
+.em-list li::before { content: '→'; position: absolute; left: 0; color: inherit; opacity: 0.5; }
+
+.problem-statement { font-size: 16px; font-weight: 300; line-height: 1.8; color: rgba(10,10,8,0.7); font-style: italic; border-left: 2px solid var(--slate); padding-left: 2rem; margin-bottom: 2rem; }
+
+/* MEMORIA EXPERIMENTAL E ITERACIONES */
+#memoria { background: var(--slate); color: var(--paper); }
+#memoria .section-eyebrow { color: var(--acid); }
+#memoria .section-heading { color: var(--paper); }
+.log-container { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 3rem; margin-left: 1rem; }
+.log-entry { position: relative; margin-bottom: 5rem; }
+.log-entry:last-child { margin-bottom: 0; }
+.log-entry::before { content: ''; position: absolute; left: -3.35rem; top: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--acid); border: 3px solid var(--slate); }
+.log-version { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acid); margin-bottom: 0.5rem; }
+.log-title { font-family: var(--font-display); font-size: 2.5rem; color: var(--paper); margin-bottom: 1rem; }
+.log-desc { font-size: 14px; font-weight: 300; line-height: 1.7; color: rgba(242,239,232,0.6); margin-bottom: 2rem; max-width: 700px; }
+.log-assets { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.log-asset { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; }
+.log-asset-icon { font-size: 1.5rem; opacity: 0.5; margin-bottom: 0.5rem; }
+.log-asset-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; color: var(--acid); text-transform: uppercase; }
+
+/* COSTOS Y CRONOGRAMA */
+#logistica { background: var(--cream); }
+.logistics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.table-ui { width: 100%; border-collapse: collapse; background: var(--paper); }
+.table-ui th { background: var(--ink); color: var(--paper); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 1.5rem; text-align: left; }
+.table-ui td { padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(10,10,8,0.08); font-size: 13px; font-weight: 300; color: var(--ink); }
+.table-ui tr:last-child td { font-weight: 500; font-size: 14px; background: rgba(10,10,8,0.03); }
+.table-ui.sprints th { background: var(--slate); }
+.table-ui.sprints td:first-child { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--rust); }
+
+/* FICHA TÉCNICA */
+#ficha { background: var(--ink); color: var(--paper); }
+#ficha .section-eyebrow { color: var(--acid); }
+#ficha .section-heading { color: var(--paper); }
+.tech-sheet { border: 1px solid rgba(255,255,255,0.1); padding: 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+.ts-col { display: flex; flex-direction: column; gap: 2rem; }
+.ts-group { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2rem; }
+.ts-group:last-child { border-bottom: none; padding-bottom: 0; }
+.ts-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--acid); margin-bottom: 1rem; }
+.ts-value { font-size: 14px; font-weight: 300; line-height: 1.6; color: rgba(242,239,232,0.7); }
+.ts-value strong { color: var(--paper); font-weight: 500; }
+
+.back-section { background:var(--ink);padding:4rem;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1; border-top: 1px solid rgba(255,255,255,0.05); }
+.back-link { font-family:var(--font-display);font-size:2rem;color:var(--paper);text-decoration:none;letter-spacing:.1em;transition:color .3s;display:flex;align-items:center;gap:1rem; }
+.back-link:hover { color:var(--acid); }
+.back-link-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;color:rgba(242,239,232,.3);text-transform:uppercase; }
+
+/* ANIMACIONES */
+.reveal { opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease; }
+.reveal.visible { opacity:1;transform:none; }
+.reveal-delay-1 { transition-delay:.1s; }
+.reveal-delay-2 { transition-delay:.2s; }
+@keyframes slide-up { from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none} }
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="progress-bar" id="pbar"></div>
+
+<nav>
+  <a href="index.html" class="nav-back">← Bitácora General</a>
+  <div class="nav-title">Documentación Técnica</div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg-text">DOCS</div>
+  <div class="hero-tag">
+    <span>Memoria de Diseño</span>
+    <span>Procesos Experimentales</span>
+    <span>Dossier Técnico Final</span>
+  </div>
+  <div class="hero-eyebrow">// Reporte de Proyecto — Rúbrica 30 Puntos</div>
+  <h1 class="hero-title">Memoria<br>Técnica &<br>Procesos</h1>
+  <div class="hero-bottom-row">
+    <div>
+      <div class="hero-data-label">Proyecto Referencia</div>
+      <div class="hero-data-val">WEARAVEST Chaleco Outdoor</div>
+    </div>
+    <div>
+      <div class="hero-data-label">Metodología</div>
+      <div class="hero-data-val">Design Thinking + Pahl & Beitz</div>
+    </div>
+    <div>
+      <div class="hero-data-label">Fase</div>
+      <div class="hero-data-val">Documentación y Cierre</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">01 — Investigación y Contexto (30%)</span></div>
+
+<section id="investigacion">
+  <div class="section-eyebrow">// Planteamiento del problema y Análisis</div>
+  <h2 class="section-heading reveal">Etnografía &<br>User Persona</h2>
+  
+  <div class="research-grid">
+    <div class="user-persona reveal">
+      <div class="up-header">
+        <div class="up-avatar">JR</div>
+        <div>
+          <div class="up-name">Jorge Ramírez</div>
+          <div class="up-demo">48 años · MTY, México</div>
+        </div>
+      </div>
+      <div class="up-stats">
+        <div class="up-stat-item"><strong>Ocupación</strong> Gerente de logística, trabajo sedentario y de alto estrés.</div>
+        <div class="up-stat-item"><strong>Arquetipo</strong> "El Escapista" — Busca la naturaleza para desconectar de pantallas y tecnología.</div>
+        <div class="up-stat-item"><strong>Hábito</strong> Hiking de media montaña, 2 veces al mes. Frecuentemente termina bajando al anochecer.</div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-1">
+      <div class="problem-statement">
+        "El problema de la tecnología de seguridad actual (smartphones, GPS portátiles) es que exigen atención visual y motriz. Cuando una persona hace hiking y oscurece, sacar un dispositivo del bolsillo rompe la inmersión natural y ocupa las manos necesarias para el equilibrio."
+      </div>
+
+      <h3 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 1.5rem;">Mapa de Empatía (Resumen)</h3>
+      <div class="empathy-map">
+        <div class="em-box pains">
+          <div class="em-title">Pains (Frustraciones)</div>
+          <ul class="em-list">
+            <li>Ansiedad de la familia por no tener señal celular en la montaña.</li>
+            <li>Peligro de torceduras o caídas por falta de visibilidad periférica en el sendero.</li>
+            <li>Incomodidad de llevar equipo extra pesado (linternas de cabeza, baterías).</li>
+          </ul>
+        </div>
+        <div class="em-box gains">
+          <div class="em-title">Gains (Alegrías / Deseos)</div>
+          <ul class="em-list">
+            <li>Libertad total de movimiento.</li>
+            <li>Sentimiento de seguridad sin sentirse vigilado o atado a una pantalla.</li>
+            <li>Prendas utilitarias (con bolsillos) que resistan abrasión (ramas, rocas).</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div style="background: var(--cream); padding: 2rem; border-left: 2px solid var(--slate);">
+        <strong style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--slate); display: block; margin-bottom: 0.5rem;">Justificación del Diseño</strong>
+        <p style="font-size: 13px; font-weight: 300; line-height: 1.7; color: rgba(10,10,8,0.7);">
+          A partir de esta investigación, se decidió diseñar el <strong>WEARAVEST</strong>. Un chaleco utilitario equipado con electrónica e-textile imperceptible que brinde visibilidad e interconexión satelital a un solo toque, permitiendo al usuario concentrarse 100% en su entorno.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="background:rgba(255,255,255,.05);"><span class="divider-label" style="background:var(--slate);color:var(--acid);">02 — Memoria de Diseño e Iteraciones (40%)</span></div>
+
+<section id="memoria">
+  <div class="section-eyebrow">// Reporte de Procesos Experimentales</div>
+  <h2 class="section-heading reveal">Diario de<br>Iteraciones</h2>
+  
+  <p style="font-size: 15px; font-weight: 300; line-height: 1.8; color: rgba(242,239,232,0.6); max-width: 650px; margin-bottom: 4rem;" class="reveal">
+    La documentación del proceso demuestra la importancia de unir la ingeniería y el diseño de modas. A continuación se reportan los planos, modelados 3D y las resoluciones a fallos técnicos críticos experimentados durante el desarrollo del prototipo.
+  </p>
+
+  <div class="log-container reveal reveal-delay-1">
+    
+    <div class="log-entry">
+      <div class="log-version">Fase 1 / Diseño Textil y Patronaje Base</div>
+      <h3 class="log-title">Patronaje 2D y Canales de Forro</h3>
+      <p class="log-desc">
+        Partimos de los trazos base del libro CyC (Talla L hombre). <strong>Proceso experimental:</strong> El primer prototipo en papel limitaba el movimiento de los brazos. Se iteró el patrón abriendo la sisa 3 cm y ajustando la holgura en el pecho para permitir el uso de capas de ropa (layering) tan comunes en el hiking. Adicionalmente, se diseñó un sistema de forro doble (Popelina estructurada y malla Mesh deportiva) para crear canales internos destinados al ruteo del cableado y disipación térmica.
+      </p>
+      <div class="log-assets">
+        <div class="log-asset">
+          <div class="log-asset-icon">📐</div>
+          <div class="log-asset-label">Insertar Documento:<br>Planos 2D (CyC Modificado)</div>
+        </div>
+        <div class="log-asset">
+          <div class="log-asset-icon">📝</div>
+          <div class="log-asset-label">Insertar Imagen:<br>Bocetos e Ideas (Sketching)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="log-entry">
+      <div class="log-version">Fase 2 / Experimentación de Materiales</div>
+      <h3 class="log-title">Termocromía y Pivote Visual</h3>
+      <p class="log-desc">
+        <strong>Proceso experimental fallido:</strong> El primer enfoque para la visibilidad del chaleco consistió en intentar hacerlo térmico, integrando parches con tinta termocromática para que la prenda cambiara de color en reacción al calor corporal. Tras diversas pruebas en campo y lavados, la eficiencia del parche se degradó drásticamente y no garantizaba la visibilidad nocturna. <br><br>
+        <strong>Resolución:</strong> Se descartó la tinta y se pivotó hacia una visibilidad electrónica activa utilizando tiras LED de intensidad manipulable y con secuencias preprogramadas.
+      </p>
+      </div>
+
+    <div class="log-entry">
+      <div class="log-version">Fase 3 / Telecomunicaciones y Energía</div>
+      <h3 class="log-title">Colapso GSM y Módulo GPS</h3>
+      <p class="log-desc">
+        Para el sistema de alertas de emergencia, el diseño inicial utilizaba un módulo GSM para enviar mensajes de texto (SMS).<br><br>
+        <strong>Proceso experimental fallido:</strong> Durante las pruebas, descubrimos que el módulo GSM demandaba picos de corriente muy agresivos (hasta 2A) durante la transmisión de la ráfaga de datos. Esta deficiente administración de corriente desestabilizaba el circuito, provocando que el microcontrolador se reiniciara al intentar encender simultáneamente la tira LED.<br><br>
+        <strong>Resolución:</strong> Se iteró toda la arquitectura técnica. Se reemplazó el MCU genérico por un potente <strong>XIAO ESP32 S3</strong>. Se descartó el GSM y se optó por un módulo GPS satelital <strong>Neo-6M</strong>, usando el WiFi del ESP32 para procesar los datos a través de la <strong>API de Telegram</strong>. Finalmente, todo el ecosistema fue soportado por un robusto banco de energía de <strong>12V y 3A</strong>, estabilizando por completo el proyecto.
+      </p>
+      </div>
+
+    <div class="log-entry">
+      <div class="log-version">Fase 4 / Integración E-Textile</div>
+      <h3 class="log-title">Modelado 3D, App y Ensamblaje Final</h3>
+      <p class="log-desc">
+        Antes de cortar y ensamblar la gabardina, se modeló el chaleco en 3D para evaluar la caída de la tela (drape) con el peso de la batería de 12V y ocultar la controladora ESP32 en la zona lumbar. Al coser el circuito final, se reforzaron los canales internos del forro y se enrutaron los LEDs (los cuales ahora se pueden manipular por medio de una app para cambiar color, intensidad y ejecutar secuencias con música). La estética outdoor logró disimular por completo el hardware.
+      </p>
+      <div class="log-assets">
+        <div class="log-asset">
+          <div class="log-asset-icon">🧥</div>
+          <div class="log-asset-label">Insertar Imagen:<br>Modelado 3D / Renders de Caída</div>
+        </div>
+        <div class="log-asset">
+          <div class="log-asset-icon">📹</div>
+          <div class="log-asset-label">Insertar Evidencia (Foto/Video):<br>Prototipo armado, costuras y hardware</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"><span class="divider-label">03 — Logística del Proyecto (15%)</span></div>
+
+<section id="logistica">
+  <div class="section-eyebrow">// Planificación Financiera y Tiempos</div>
+  <h2 class="section-heading reveal">Costos &<br>Cronograma</h2>
+  
+  <div class="logistics-grid reveal reveal-delay-1">
+    <div>
+      <table class="table-ui">
+        <thead>
+          <tr>
+            <th>Desglose de Costos (Prototipo V1.0)</th>
+            <th style="text-align: right;">MXN Estimado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Material Textil (Gabardina uso rudo, Popelina, Mesh)</td>
+            <td style="text-align: right;">$400.00</td>
+          </tr>
+          <tr>
+            <td>Hardware Lógico (XIAO ESP32 S3, Módulo GPS Neo-6M)</td>
+            <td style="text-align: right;">$650.00</td>
+          </tr>
+          <tr>
+            <td>Hardware Activo (Tira LED controlable por App, Batería 12V 3A)</td>
+            <td style="text-align: right;">$600.00</td>
+          </tr>
+          <tr>
+            <td>Insumos de Confección (Hilo, broches, cierres, cableado interno)</td>
+            <td style="text-align: right;">$200.00</td>
+          </tr>
+          <tr>
+            <td>Mano de obra, Diseño 3D y Servicios (API Telegram)</td>
+            <td style="text-align: right;">$300.00</td>
+          </tr>
+          <tr>
+            <td><strong>Costo Total de Inversión (Prototipo Alfa)</strong></td>
+            <td style="text-align: right; color: var(--rust);"><strong>$2,150.00</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <table class="table-ui sprints">
+        <thead>
+          <tr>
+            <th>Cronograma</th>
+            <th>Fase y Tareas Críticas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Semana 1-2</td>
+            <td><strong>Investigación UX y Materiales:</strong> User Persona, Design Thinking y pruebas fallidas de termocromía.</td>
+          </tr>
+          <tr>
+            <td>Semana 3</td>
+            <td><strong>Diseño de Modas:</strong> Generación de Planos 2D, modificación de Sisa (+3cm) y simulaciones 3D.</td>
+          </tr>
+          <tr>
+            <td>Semana 4</td>
+            <td><strong>Ingeniería:</strong> Fallo módulo GSM por corriente. Migración exitosa a ESP32, Neo-6M y API Telegram.</td>
+          </tr>
+          <tr>
+            <td>Semana 5-6</td>
+            <td><strong>Manufactura:</strong> Corte de tela, confección, ensamblaje de forros, instalación de batería 12V y ruteo LED.</td>
+          </tr>
+          <tr>
+            <td>Semana 7</td>
+            <td><strong>Validación:</strong> Pruebas outdoor de envío GPS, control de LEDs con música desde la app y documentación.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="background:rgba(255,255,255,.05);"><span class="divider-label" style="background:var(--ink);color:var(--acid);">04 — Especificaciones Duras (15%)</span></div>
+
+<section id="ficha">
+  <div class="section-eyebrow">// Datos y especificaciones físicas</div>
+  <h2 class="section-heading reveal">Ficha Técnica<br>del Sistema</h2>
+  
+  <div class="tech-sheet reveal reveal-delay-1">
+    <div class="ts-col">
+      <div class="ts-group">
+        <div class="ts-label">// Cómputo y Telecomunicaciones</div>
+        <div class="ts-value">
+          <strong>Microcontrolador:</strong> Seeed Studio XIAO ESP32 S3.<br>
+          <strong>Localización:</strong> Módulo U-blox Neo-6M GPS (Recepción de sentencias NMEA).<br>
+          <strong>Transmisión de Alerta:</strong> Request HTTP a API de Telegram vía conexión WiFi del ESP32.
+        </div>
+      </div>
+      <div class="ts-group">
+        <div class="ts-label">// Materiales Textiles y Confección</div>
+        <div class="ts-value">
+          <strong>Shell (Exterior):</strong> Gabardina verde olivo 100% algodón (Alta resistencia a desgarres y abrasión).<br>
+          <strong>Lining (Interior):</strong> Forro dual de Popelina estructurada y malla Mesh deportiva.<br>
+          <strong>Patronaje:</strong> Talla L modificada con +3cm de sisa y canales ocultos en forro para cableado.
+        </div>
+      </div>
+    </div>
+    
+    <div class="ts-col">
+      <div class="ts-group">
+        <div class="ts-label">// Energía y Rendimiento Eléctrico</div>
+        <div class="ts-value">
+          <strong>Batería Principal:</strong> Pack recargable de <strong>12V y 3A</strong> alojado en zona lumbar.<br>
+          <strong>Consumo Reposo (Standby):</strong> ~50mA.<br>
+          <strong>Consumo Activo (LEDs + GPS TX):</strong> ~400mA.<br>
+          <strong>Tolerancia:</strong> Soporta eficientemente picos de conexión WiFi y picos de encendido de tira LED, resolviendo el colapso experimentado en la Fase 2.
+        </div>
+      </div>
+      <div class="ts-group">
+        <div class="ts-label">// Entradas y Salidas (I/O)</div>
+        <div class="ts-value">
+          <strong>Input de Emergencia:</strong> Botón físico táctil cosido en el pecho del chaleco.<br>
+          <strong>Output Visual (Luces):</strong> Tira LED interactiva que puede ser controlada externamente mediante una <strong>Aplicación Móvil</strong>. Permite ajustar color, intensidad lumínica y ejecutar secuencias reactivas sincronizadas con la música.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="back-section">
+  <div>
+    <div class="back-link-label">Ir al Inicio</div>
+    <a href="index.html" class="back-link">← Bitácora General</a>
+  </div>
+</div>
+
+<script>
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  dot.style.left = mx+'px'; dot.style.top = my+'px';
+  rx += (mx-rx)*.15; ry += (my-ry)*.15;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pbar').style.width = pct+'%';
+  document.querySelectorAll('.reveal').forEach(el => {
+    if(el.getBoundingClientRect().top < window.innerHeight-60) el.classList.add('visible');
+  });
+});
+setTimeout(() => document.querySelectorAll('.reveal').forEach(el => {
+  if(el.getBoundingClientRect().top < window.innerHeight-60) el.classList.add('visible');
+}), 200);
+</script>
+</body>
+</html>
